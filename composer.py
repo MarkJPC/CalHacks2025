@@ -9,19 +9,23 @@ GREEN = (0, 255, 0)
 WHITE = (255, 255, 255)
 
 class Composer:
-    def __init__(self):
+    def __init__(self, dancer=None):
         self.sound_energy = 100
         self.max_energy = 100
         self.font = pygame.font.Font(None, 24)  # For UI text
+        self.dancer = dancer if dancer is not None else "NULL_DANCER"
 
-        # Ability costs
+        # Ability costs (`Key` is keyboard bind, `value` is ability cost)
         self.ability_costs = {
-            'A': 10,  # Super Jump
-            'B': 10,  # Dash
-            'C': 15,  # Blink
-            'D': 15,  # Shield
-            # Add other abilities as needed
+            COMPOSER_KEY_BINDS[0]: 10,  # Super Jump
+            COMPOSER_KEY_BINDS[1]: 10,  # Dash
+            COMPOSER_KEY_BINDS[2]: 15,  # Blink
+            COMPOSER_KEY_BINDS[3]: 15,  # Shield
+            COMPOSER_KEY_BINDS[4]: 10,  # Time slow
+            COMPOSER_KEY_BINDS[5]: 10,  # Magnet
+            COMPOSER_KEY_BINDS[6]: 10,  # Speeds up tempo
         }
+        print(self.ability_costs)
 
     def use_energy(self, amount):
         if self.sound_energy >= amount:
@@ -32,27 +36,41 @@ class Composer:
     def recharge(self, amount):
         self.sound_energy = min(self.sound_energy + amount, self.max_energy)
 
-    def update(self, keys, dancer):
-        self.handle_input(keys, dancer)
+    def update(self, keys):
+        self.handle_input(keys)
 
     def handle_input(self, keys, dancer):
-        # Super Jump - A
-        if keys[pygame.K_a]:
-            if self.use_energy(self.ability_costs['A']):
-                dancer.super_jump()
-        # Dash - B
+        # Super Jump - 1
+        if keys[pygame.K_1]:
+            if self.use_energy(self.ability_costs[1]):
+                dancer.super_jump = True
+        # Dash - 2
         if keys[pygame.K_s]:
-            if self.use_energy(self.ability_costs['B']):
-                direction = 1 if keys[pygame.K_RIGHT] else -1
-                dancer.dash(direction)
-        # Shield - D
-        if keys[pygame.K_f]:
-            if self.use_energy(self.ability_costs['D']):
-                dancer.activate_shield()
-        # Implement other abilities similarly...
+            if self.use_energy(self.ability_costs[2]):
+                dancer.can_dash = True
+        # Blink - 3
+        if keys[pygame.K_3]:
+            if self.use_energy(self.ability_costs[3]):
+                dancer.blink = True
+        # Shield - 4
+        if keys[pygame.K_4]:
+            if self.use_energy(self.ability_costs[4]):
+                dancer.activate_shield = True
+        # Time Slow - 5
+        if keys[pygame.K_5]:
+            if self.use_energy(self.ability_costs[5]):
+                dancer.slow_time = True
+        # Magnet - 6
+        if keys[pygame.K_6]:
+            if self.use_energy(self.ability_costs[6]):
+                dancer.activate_magnet = True
+        # Speeds up temp - 7
+        if keys[pygame.K_7]:
+            if self.use_energy(self.ability_costs[7]):
+                dancer.speed_up_tempo = True
 
-    def collect_notes(self, dancer, note_shards):
-        collected = pygame.sprite.spritecollide(dancer, note_shards, True)
+    def collect_notes(self, note_shards):
+        collected = pygame.sprite.spritecollide(self.dancer, note_shards, True)
         if collected:
             for shard in collected:
                 self.recharge(20)
