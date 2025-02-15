@@ -17,7 +17,7 @@ def main():
 
     # Create game objects
     dancer = Dancer((100, HEIGHT - 100))
-    composer = Composer()
+    composer = Composer(dancer)
     level = Level()
     all_sprites = pygame.sprite.Group()
     all_sprites.add(dancer)

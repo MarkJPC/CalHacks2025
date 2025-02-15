@@ -3,7 +3,13 @@
 import pygame
 from settings import *
 
+# Define colors
+WHITE = (255, 255, 255)
+BLUE = (0, 0, 255)
+
 class Dancer(pygame.sprite.Sprite):
+
+    # initialize the dancer
     def __init__(self, pos):
         super().__init__()
         self.image = pygame.Surface((40, 80), pygame.SRCALPHA)
@@ -11,10 +17,20 @@ class Dancer(pygame.sprite.Sprite):
         self.velocity = pygame.math.Vector2(0, 0)
         self.on_ground = False
 
-        # Ability-related attributes
+        # Set ability-related attributes (ability booleans)
+        self.can_boost_jump = False
+        self.can_dash = False
+        self.can_blink = False
+
+
+        # time slow works same as shield (activated by composer, timer runs down)
+        # magnet works same as shield
         self.shielded = False
         self.shield_timer = 0
 
+        # speed up tempo
+
+        # draw dancer
         self.draw_stick_figure()
 
     def draw_stick_figure(self):
@@ -40,6 +56,8 @@ class Dancer(pygame.sprite.Sprite):
         self.velocity.y += 1  # Adjust gravity as needed
 
     def update(self, keys, platforms):
+
+        # physical updates
         self.handle_input(keys)
         self.apply_gravity()
         self.rect.x += self.velocity.x
@@ -58,6 +76,9 @@ class Dancer(pygame.sprite.Sprite):
         self.velocity.x = 0
         if keys[pygame.K_LEFT]:
             self.velocity.x = -DANCER_SPEED
+
+
+
         if keys[pygame.K_RIGHT]:
             self.velocity.x = DANCER_SPEED
         if keys[pygame.K_UP] and self.on_ground:
@@ -84,7 +105,7 @@ class Dancer(pygame.sprite.Sprite):
             else:
                 self.on_ground = False
 
-    # Ability methods
+    # Ability methods(use them then set boolean back to false)
     def super_jump(self):
         self.velocity.y = -DANCER_JUMP_POWER * 1.5
 
