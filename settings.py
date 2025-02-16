@@ -47,6 +47,8 @@ DEATH_EVENT = pygame.USEREVENT
 
 WIN_EVENT = pygame.USEREVENT
 
+MENU_EVENT = pygame.USEREVENT
+
 # Misc.
 X_AXIS = 'x'
 Y_AXIS = 'y'

@@ -155,7 +155,8 @@ def handle_gameplay(screen, clock, dancer, composer, level, camera, all_sprites,
             return VICTORY
         
         return GAME
-        
+    
+
 def handle_start_screen(screen):
     font = pygame.font.SysFont('Arial', 50)
     title_text = font.render('Tempo Tactics', True, (255, 255, 255))
@@ -174,18 +175,18 @@ def handle_start_screen(screen):
         screen.blit(play_text, play_rect)
         screen.blit(exit_text, exit_rect)
 
-        # menu_sound.play()
+        menu_sound.play()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return False  # Exit the game                
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if play_rect.collidepoint(pygame.mouse.get_pos()):
+                    menu_sound.stop()
                     return True  # Start the game
-                    pygame.mixer.pause('assets/sounds/menu.wav')
                 elif exit_rect.collidepoint(pygame.mouse.get_pos()):
-                    return False  # Exit the game
-                    pygame.mixer.pause('assets/sounds/menu.wav')
+                    menu_sound.stop()
+                    return False  # Exit the game        
 
         pygame.display.flip()
         pygame.time.Clock().tick(60)
