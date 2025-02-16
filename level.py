@@ -27,6 +27,10 @@ class Level:
         platform2 = Platform(450, 350, 150, 20)
         self.platforms.add(platform2)
 
+        # Wall 1
+        wall1 = Platform(450, 350, 15, 200)
+        self.platforms.add(wall1)
+
         # Add more platforms as needed
 
     def create_note_shards(self):
