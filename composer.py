@@ -46,7 +46,7 @@ class Composer:
             if self.use_energy(self.ability_costs[1]):
                 self.dancer.super_jump = True
         # Dash - 2
-        if keys[pygame.K_s]:
+        if keys[pygame.K_2]:
             if self.use_energy(self.ability_costs[2]):
                 self.dancer.can_dash = True
         # Blink - 3
@@ -63,7 +63,7 @@ class Composer:
                 self.dancer.activate_magnet()
         
         # LEVEL WIDE AFFECTS
-        # # Speeds up temp - 7
+        # # Speeds up tempo - 7
         # if keys[pygame.K_7]:
         #     if self.use_energy(self.ability_costs[7]):
         #         self.dancer.speed_up_tempo = True
