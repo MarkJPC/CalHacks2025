@@ -17,6 +17,16 @@ DANCER_SPEED = 5
 DANCER_JUMP_POWER = 20
 SHIELD_DURATION = 3
 MAGNET_DURATION = 3
+BLINK_DISTANCE = (DANCER_SPEED / 2)
+DASH_DISTANCE = 100  # Total distance to dash
+DASH_SPEED = 5      # Movement per iteration
 
 # Composer settings
 COMPOSER_KEY_BINDS = [1,2,3,4,5,6,7]
+    # 1: Super jump
+    # 2: Dash
+    # 3: Blink
+    # 4: Shield
+    # 5: Time Slow
+    # 6: Magnet
+    # 7:Speeds up tempo

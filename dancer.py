@@ -18,7 +18,9 @@ class Dancer(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft=pos)
         self.velocity = pygame.math.Vector2(0, 0)
         self.on_ground = False
-
+        
+        self.direction = pygame.math.Vector2(0, 0)
+        
         # Set ability-related attributes (ability booleans)
         self.can_super_jump = False
         self.can_dash = False
@@ -75,34 +77,33 @@ class Dancer(pygame.sprite.Sprite):
 
     def handle_input(self, keys):
         self.velocity.x = 0
-        direction = pygame.math.Vector2(0, 0)
 
         if keys[pygame.K_LEFT]:
             self.velocity.x = -DANCER_SPEED
-            direction.x = -1  
+            self.direction.x = -1  
 
             # dash ability
             if (self.can_dash):
-                self.dash(direction.x)
+                self.dash()
                 self.can_dash = False  
 
             # Blink ability
             if self.can_blink:
-                self.blink(direction)
+                self.blink()
                 self.can_blink = False  # Reset after use
 
         elif keys[pygame.K_RIGHT]:
             self.velocity.x = DANCER_SPEED
-            direction.x = 1
+            self.direction.x = 1
 
             # dash ability
             if (self.can_dash):
-                self.dash(direction.x)
+                self.dash()
                 self.can_dash = False  
 
             # Blink ability
             if self.can_blink:
-                self.blink(direction)
+                self.blink()
                 self.can_blink = False  # Reset after use
         else:
             # If not moving, reset velocity.x
@@ -112,12 +113,11 @@ class Dancer(pygame.sprite.Sprite):
             if self.on_ground:
                 if self.can_super_jump:
                     self.super_jump()
-                    self.can_super_jump = False
                 else:
                     self.velocity.y = -DANCER_JUMP_POWER
-            direction.y = -1
+            self.direction.y = -1
         elif keys[pygame.K_DOWN]:
-            direction.y = 1
+            self.direction.y = 1
 
     def check_collisions(self, direction, platforms):
         if direction == 'x':
@@ -152,23 +152,29 @@ class Dancer(pygame.sprite.Sprite):
     def super_jump(self):
         print("super jump")
         self.velocity.y = -DANCER_JUMP_POWER * 1.5
+        self.can_super_jump = False
 
-    def dash(self, direction):
+    def dash(self):
         # Direction: -1 for left, 1 for right
-        dash_distance = 100  # Total distance to dash
-        dash_speed = 5      # Movement per iteration
-        steps = int(dash_distance / dash_speed)
+        steps = int(DASH_DISTANCE / DASH_SPEED)
         for _ in range(steps):
             # Move the dancer incrementally
-            self.rect.x += dash_speed * direction
+            self.rect.x += DASH_SPEED * self.direction.x
             # Check for collisions
             if self.check_collisions('x', self.level.platforms):
                 # Collision occurred; stop the dash
+                self.can_dash = False
                 break
         pass
 
     def blink(self):
-        # Implement blink (teleport) action here
+        # self.rect.x += BLINK_DISTANCE * direction.x
+        # self.rect.y += BLINK_DISTANCE * direction.y        
+        
+        if (not self.check_collisions('x', self.level.platforms)):
+                self.rect.x += int(BLINK_DISTANCE) * self.direction.x
+        if (not self.check_collisions('y', self.level.platforms)):
+                self.rect.y += int(BLINK_DISTANCE) * self.direction.y        
         pass
 
     def activate_shield(self):
