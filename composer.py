@@ -17,6 +17,7 @@ class Composer:
         self.font = pygame.font.Font(None, 24)  # For UI text
         self.dancer = dancer if dancer is not None else "NULL_DANCER"
         self.level = level if level is not None else "NULL_LEVEL"
+        self.pressed_notes = [] # records the keys pressed
 
         # Ability costs (`Key` is keyboard bind, `value` is ability cost)
         self.ability_costs = {
@@ -73,8 +74,8 @@ class Composer:
             if self.use_energy(self.ability_costs[4]):
                 self.dancer.activate_shield()
                 self.note_sounds['shield'].play()
-        # Magnet - 5
-        if key == pygame.K_5:
+        # Magnet - 6
+        if key == pygame.K_6:
             if self.use_energy(self.ability_costs[5]):
                 self.dancer.activate_magnet()
                 self.note_sounds['magnet'].play()

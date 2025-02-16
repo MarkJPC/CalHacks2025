@@ -20,10 +20,9 @@ DANCER_JUMP_POWER = 20
 SHIELD_DURATION = 3
 MAGNET_DURATION = 5
 MAGNET_RANGE = 25
-BLINK_DISTANCE = (DANCER_SPEED)
 DASH_DISTANCE = 100  # Total distance to dash
 DASH_SPEED = 5      # Movement per iteration
-BLINK_DISTANCE_ALONG_X = int(DASH_DISTANCE / 2)
+BLINK_DISTANCE_ALONG_X = int(DASH_DISTANCE / 2) + 20
 BLINK_DISTANCE_ALONG_Y = BLINK_DISTANCE_ALONG_X# + 50 # adding a constant 50 allows for blinking through objects along y (idk why either)
 
 # Composer settings
