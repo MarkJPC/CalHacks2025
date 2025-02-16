@@ -18,16 +18,17 @@ class Composer:
         self.dancer = dancer if dancer is not None else "NULL_DANCER"
         self.level = level if level is not None else "NULL_LEVEL"
         self.sequence_of_activated_abilities = [] # records the keys pressed (the key bind for each ability)
+        self.play_activated_abilities_note_at_index = 0
         
         # Load note sounds
         self.note_sounds = {
-            'super_jump': pygame.mixer.Sound('assets/sounds/note_A.wav'),
-            'dash': pygame.mixer.Sound('assets/sounds/note_B.wav'),
-            'blink': pygame.mixer.Sound('assets/sounds/note_C.wav'),
-            'shield': pygame.mixer.Sound('assets/sounds/note_D.wav'),
-            'time_slow': pygame.mixer.Sound('assets/sounds/note_E.wav'),
-            'magnet': pygame.mixer.Sound('assets/sounds/note_F.wav'),
-            'speed_up_tempo': pygame.mixer.Sound('assets/sounds/note_G.wav'),
+            COMPOSER_KEY_BINDS_TYPES[0]: pygame.mixer.Sound('assets/sounds/note_A.wav'),
+            COMPOSER_KEY_BINDS_TYPES[1]: pygame.mixer.Sound('assets/sounds/note_B.wav'),
+            COMPOSER_KEY_BINDS_TYPES[2]: pygame.mixer.Sound('assets/sounds/note_C.wav'),
+            COMPOSER_KEY_BINDS_TYPES[3]: pygame.mixer.Sound('assets/sounds/note_D.wav'),
+            COMPOSER_KEY_BINDS_TYPES[4]: pygame.mixer.Sound('assets/sounds/note_E.wav'),
+            COMPOSER_KEY_BINDS_TYPES[5]: pygame.mixer.Sound('assets/sounds/note_F.wav'),
+            COMPOSER_KEY_BINDS_TYPES[6]: pygame.mixer.Sound('assets/sounds/note_G.wav'),
         }
         
         # Ability costs (`Key` is keyboard bind, `value` is ability cost)
@@ -59,31 +60,31 @@ class Composer:
         if key == pygame.K_1:
             if self.use_energy(self.ability_costs[1]):
                 self.dancer.can_super_jump = True
-                self.note_sounds['super_jump'].play()
+                self.note_sounds[COMPOSER_KEY_BINDS_TYPES[0]].play()
                 self.sequence_of_activated_abilities.append(COMPOSER_KEY_BINDS[0])
         # Dash - 2
         if key == pygame.K_2:
             if self.use_energy(self.ability_costs[2]):
                 self.dancer.can_dash = True
-                self.note_sounds['dash'].play()
+                self.note_sounds[COMPOSER_KEY_BINDS_TYPES[1]].play()
                 self.sequence_of_activated_abilities.append(COMPOSER_KEY_BINDS[1])
         # Blink - 3
         if key == pygame.K_3:
             if self.use_energy(self.ability_costs[3]):
                 self.dancer.can_blink = True
-                self.note_sounds['blink'].play()
+                self.note_sounds[COMPOSER_KEY_BINDS_TYPES[2]].play()
                 self.sequence_of_activated_abilities.append(COMPOSER_KEY_BINDS[2])
         # Shield - 4
         if key == pygame.K_4:
             if self.use_energy(self.ability_costs[4]):
                 self.dancer.activate_shield()
-                self.note_sounds['shield'].play()
+                self.note_sounds[COMPOSER_KEY_BINDS_TYPES[3]].play()
                 self.sequence_of_activated_abilities.append(COMPOSER_KEY_BINDS[3])
         # Magnet - 6
         if key == pygame.K_6:
             if self.use_energy(self.ability_costs[5]):
                 self.dancer.activate_magnet()
-                self.note_sounds['magnet'].play()
+                self.note_sounds[COMPOSER_KEY_BINDS_TYPES[5]].play()
                 self.sequence_of_activated_abilities.append(COMPOSER_KEY_BINDS[5])
 
         print(self.sequence_of_activated_abilities)
@@ -138,9 +139,30 @@ class Composer:
             counter += 1
     
     def play_composed_music(self):
-        for key_bind_pressed in self.sequence_of_activated_abilities:
-            self.note_sounds[COMPOSER_KEY_BINDS_TYPES[key_bind_pressed - 1]].play()
-        print("Playing composed music")
+        size_of_activated_abilities = len(self.sequence_of_activated_abilities)
+        
+        if (size_of_activated_abilities <= 0):  # no abilities pressed, return
+            return
 
-
-# composer.play_composed_music()  # play the composed song from the abilities activated
+        # play note
+        key_bind_pressed = self.sequence_of_activated_abilities[self.play_activated_abilities_note_at_index]
+        self.note_sounds[COMPOSER_KEY_BINDS_TYPES[key_bind_pressed - 1]].play()
+        pygame.time.wait(500)   # wait before going back/playing another note
+        # check the note to play, 
+        if (self.play_activated_abilities_note_at_index == size_of_activated_abilities - 1):
+            self.play_activated_abilities_note_at_index = 0    # replay the created music composition from the start, cycle
+            return
+        self.play_activated_abilities_note_at_index += 1    # play the next note in the sequence        
+        
+    # def play_composed_music_PRIVATE(self):
+    #     key_bind_pressed = self.sequence_of_activated_abilities[self.play_activated_abilities_note_at_index]
+    #     self.note_sounds[COMPOSER_KEY_BINDS_TYPES[key_bind_pressed - 1]].play()
+    #     pygame.time.wait(500)   # wait before going back/playing another note
+    #     if (self.play_activated_abilities_note_at_index == len(self.sequence_of_activated_abilities) - 1):
+    #         self.play_activated_abilities_note_at_index = 0    # replay from the start the created music composition
+    #         return
+    #     self.play_activated_abilities_note_at_index += 1    # play the next note in the sequence
+        
+    #     # for key_bind_pressed in self.sequence_of_activated_abilities:
+    #     #     self.note_sounds[COMPOSER_KEY_BINDS_TYPES[key_bind_pressed - 1]].play()
+    #     #     pygame.time.wait(1000)

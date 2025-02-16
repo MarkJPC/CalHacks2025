@@ -45,8 +45,8 @@ def main():
             if game_state is None:
                 running = False  # Exit the game
         elif game_state == DEAD:
-            running = handle_death_screen(screen)
-
+            running = handle_death_screen(screen, composer)
+            
             if running:
                 # Restart the game
                 dancer, composer, level, camera, all_sprites, metronome_sound = initialize_game()
@@ -54,7 +54,7 @@ def main():
             else:
                 break  # Exit the game
         elif game_state == VICTORY:
-            running = handle_victory_screen(screen)
+            running = handle_victory_screen(screen, composer)
 
             if running:
                 # Restart the game
@@ -191,7 +191,7 @@ def handle_start_screen(screen):
         pygame.display.flip()
         pygame.time.Clock().tick(60)
 
-def handle_death_screen(screen):
+def handle_death_screen(screen, composer):
     font = pygame.font.SysFont('Arial', 50)
     death_text = font.render('You Died', True, (255, 0, 0))
     play_text = font.render('Play Again', True, (255, 255, 255))
@@ -211,7 +211,8 @@ def handle_death_screen(screen):
         screen.blit(play_text, play_rect)
         screen.blit(exit_text, exit_rect)
 
-
+        composer.play_composed_music()
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return False  # Exit the game
@@ -224,7 +225,7 @@ def handle_death_screen(screen):
         pygame.display.flip()
         pygame.time.Clock().tick(60)
 
-def handle_victory_screen(screen):
+def handle_victory_screen(screen, composer):
     font = pygame.font.SysFont('Arial', 50)
     victory_text = font.render('You Won!', True, (0, 255, 0))
     play_text = font.render('Play Again', True, (255, 255, 255))
@@ -243,7 +244,9 @@ def handle_victory_screen(screen):
         screen.blit(victory_text, victory_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 100)))
         screen.blit(play_text, play_rect)
         screen.blit(exit_text, exit_rect)
-
+        
+        composer.play_composed_music()
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return False  # Exit the game
