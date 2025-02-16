@@ -15,6 +15,8 @@ FPS = 60
 # Dancer settings
 DANCER_SPEED = 5
 DANCER_JUMP_POWER = 20
+SHIELD_DURATION = 3
+MAGNET_DURATION = 3
 
 # Composer settings
 COMPOSER_KEY_BINDS = [1,2,3,4,5,6,7]

@@ -9,11 +9,13 @@ GREEN = (0, 255, 0)
 WHITE = (255, 255, 255)
 
 class Composer:
-    def __init__(self, dancer=None):
+    def __init__(self, dancer=None, level=None):
+        self.level = level
         self.sound_energy = 100
         self.max_energy = 100
         self.font = pygame.font.Font(None, 24)  # For UI text
         self.dancer = dancer if dancer is not None else "NULL_DANCER"
+        self.level = level if level is not None else "NULL_LEVEL"
 
         # Ability costs (`Key` is keyboard bind, `value` is ability cost)
         self.ability_costs = {
@@ -54,11 +56,11 @@ class Composer:
         # Shield - 4
         if keys[pygame.K_4]:
             if self.use_energy(self.ability_costs[4]):
-                self.dancer.shielded = True
+                self.dancer.activate_shield()
         # Magnet - 6
         if keys[pygame.K_6]:
             if self.use_energy(self.ability_costs[6]):
-                self.dancer.activate_magnet = True
+                self.dancer.activate_magnet()
         
         # LEVEL WIDE AFFECTS
         # # Speeds up temp - 7

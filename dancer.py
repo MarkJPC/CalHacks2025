@@ -10,8 +10,10 @@ BLUE = (0, 0, 255)
 class Dancer(pygame.sprite.Sprite):
 
     # Initialize the dancer
-    def __init__(self, pos):
+    def __init__(self, pos, level=None):
         super().__init__()
+        self.level = level if level is not None else "NULL_LEVEL"
+
         self.image = pygame.Surface((40, 80), pygame.SRCALPHA)
         self.rect = self.image.get_rect(topleft=pos)
         self.velocity = pygame.math.Vector2(0, 0)
@@ -21,7 +23,9 @@ class Dancer(pygame.sprite.Sprite):
         self.can_boost_jump = False
         self.can_dash = False
         self.can_blink = False
-
+        self.enable_magnet = False
+        self.magnet_timer = 0
+                
         # Shield attributes
         self.shielded = False
         self.shield_timer = 0
@@ -132,6 +136,10 @@ class Dancer(pygame.sprite.Sprite):
         # Shield
         if self.shielded and self.shield_timer <= 0:
             self.shielded = False
+        
+        # Magnet
+        if self.magnet_enabled and self.magnet_timer <= 0:
+            self.magnet_enabled = False
 
     def update_ability_timers(self):
         # Update shield timer
@@ -159,6 +167,9 @@ class Dancer(pygame.sprite.Sprite):
     def activate_shield(self):
         # Activate shield and set timer
         self.shielded = True
-        self.shield_timer = FPS * 3  # Shield lasts 3 seconds
+        self.shield_timer = FPS * SHIELD_DURATION  # Shield lasts 3 seconds (default)
 
+    def activate_magnet(self):
+        self.magnet_enabled = True
+        self.magnet_timer = FPS * MAGNET_DURATION # magnet lasts 3 seconds (default)
     # Additional methods for other abilities can be added here
