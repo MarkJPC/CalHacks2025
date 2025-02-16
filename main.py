@@ -9,6 +9,8 @@ from level import Level
 from camera import Camera
 from level import *
 
+# All sound files from Freesound.com
+
 # Game states
 START = 'start'
 GAME = 'game'
@@ -72,7 +74,7 @@ def initialize_game():
     level = Level()
 
     # Create game objects
-    dancer = Dancer((100, HEIGHT - 100), level)
+    dancer = Dancer((100, SCREEN_HEIGHT - 100), level)
     composer = Composer(dancer, level)
     dancer.composer = composer
 
@@ -163,15 +165,15 @@ def handle_start_screen(screen):
     play_text = font.render('Play', True, (255, 255, 255))
     exit_text = font.render('Exit', True, (255, 255, 255))
 
-    play_rect = play_text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
-    exit_rect = exit_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 60))
+    play_rect = play_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+    exit_rect = exit_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 60))
 
     pygame.time.set_timer(DEATH_EVENT, 1)    
     menu_sound = pygame.mixer.Sound('assets/sounds/menu.wav')
 
     while True:
         screen.fill(BLACK)
-        screen.blit(title_text, title_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 100)))
+        screen.blit(title_text, title_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 100)))
         screen.blit(play_text, play_rect)
         screen.blit(exit_text, exit_rect)
 
@@ -197,8 +199,8 @@ def handle_death_screen(screen, composer):
     play_text = font.render('Play Again', True, (255, 255, 255))
     exit_text = font.render('Exit', True, (255, 255, 255))
 
-    play_rect = play_text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
-    exit_rect = exit_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 60))
+    play_rect = play_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+    exit_rect = exit_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 60))
 
     pygame.time.set_timer(DEATH_EVENT, 1)    
     death_sound = pygame.mixer.Sound('assets/sounds/death.wav')
@@ -208,7 +210,7 @@ def handle_death_screen(screen, composer):
     
     while True:
         screen.fill(BLACK)
-        screen.blit(death_text, death_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 100)))
+        screen.blit(death_text, death_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 100)))
         screen.blit(play_text, play_rect)
         screen.blit(exit_text, exit_rect)
         
@@ -232,8 +234,8 @@ def handle_victory_screen(screen, composer):
     play_text = font.render('Play Again', True, (255, 255, 255))
     exit_text = font.render('Exit', True, (255, 255, 255))
 
-    play_rect = play_text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
-    exit_rect = exit_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 60))
+    play_rect = play_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+    exit_rect = exit_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 60))
 
     pygame.time.set_timer(WIN_EVENT, 1)    
     win_sound = pygame.mixer.Sound('assets/sounds/win.wav')
@@ -243,7 +245,7 @@ def handle_victory_screen(screen, composer):
     
     while True:
         screen.fill(BLACK)
-        screen.blit(victory_text, victory_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 100)))
+        screen.blit(victory_text, victory_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 100)))
         screen.blit(play_text, play_rect)
         screen.blit(exit_text, exit_rect)
                 

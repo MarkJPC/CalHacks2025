@@ -2,14 +2,17 @@
 import pygame
 
 # Screen dimensions
-WIDTH = 800
-HEIGHT = 600
-SCREEN_SIZE = (WIDTH, HEIGHT)
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
+SCREEN_SIZE = (SCREEN_WIDTH, SCREEN_HEIGHT)
 LEVEL_WIDTH, LEVEL_HEIGHT = 3000, 1200  # Example large level size
 
 # Colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+GRAY = (122, 122, 122)
 
 # Game settings
 FPS = 60
@@ -36,6 +39,11 @@ COMPOSER_KEY_BINDS = [1,2,3,4,5,6,7]
     # 7: Speeds up tempo
 COMPOSER_KEY_BINDS_TYPES = ["Super jump", "Dash", "Blink", "Shield", 
                             "Magnet", "Time Slow", "Speeds up tempo"]
+
+# Progress bar settings
+PROGRESS_BAR_BACKGROUND_COLOR = WHITE
+PROGRESS_COLOR = GREEN
+PERCENT_TEXT_COLOR = GRAY
 
 # Ability costs (`Key` is keyboard bind, `value` is ability cost)
 ABILITY_COSTS = {

@@ -3,12 +3,6 @@
 import pygame
 from settings import *
 
-# Define colors
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
-WHITE = (255, 255, 255)
-GRAY = (122, 122, 122)
-
 class Composer:
     def __init__(self, dancer=None, level=None):
         self.level = level
@@ -92,6 +86,8 @@ class Composer:
         Draw's sound energy meter (tempo meter)
         
         Draw's the key bindings for abilities and costs
+        
+        Draw's the progress bar and progress of the `dancer` relative to the level size
         """
         # Draw sound energy meter
         energy_ratio = self.sound_energy / self.max_energy
@@ -111,7 +107,22 @@ class Composer:
         energy_text_y = y + energy_bar_height + 5
         screen.blit(energy_text, (energy_text_x, energy_text_y))
         
-        # Draw key binds
+        # Draw progress bar (in relation of `dancer`s x position)
+        progress_bar_x = 50  
+        progress_bar_y = SCREEN_HEIGHT - 25   # Position will be near the bottom of the screen
+        progress_bar_width = SCREEN_WIDTH - (2*progress_bar_x) # center the progress width relative to the screen width
+        progress_bar_height = 20
+        # make the full progress bar
+        pygame.draw.rect(screen, PROGRESS_BAR_BACKGROUND_COLOR, (progress_bar_x, progress_bar_y, progress_bar_width, progress_bar_height))
+        progress_ratio = self.dancer.rect.x / LEVEL_WIDTH
+        current_progress_width = progress_ratio * progress_bar_width
+        # current progress
+        pygame.draw.rect(screen, PROGRESS_COLOR, (progress_bar_x, progress_bar_y, current_progress_width, progress_bar_height))
+        percent_value = round(progress_ratio * 100, 2)
+        percent_text = self.font.render(f'{max(percent_value, 0.00)}%', True, PERCENT_TEXT_COLOR)
+        screen.blit(percent_text, (progress_bar_width / 2, progress_bar_y))    # center the % text
+        
+        # Draw key binds and cost
         key_bind_text_x = x
         key_bind_text_y = energy_text_y + 30
         key_bind_text = self.font.render('--Ability Keybinds | Cost--', True, WHITE)
