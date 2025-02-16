@@ -19,13 +19,14 @@ class Dancer(pygame.sprite.Sprite):
         self.image = pygame.Surface((40, 80), pygame.SRCALPHA)
         self.rect = self.image.get_rect(topleft=pos)
         # # debug
-        # print(self.rect)
+        print(self.rect)
         # print(self.rect.x //2)
         # print(self.rect.y//2)
         # print(self.image.get_width() // 2)
 
         # health
         self.health = 100
+        self.alive = True
         
         self.velocity = pygame.math.Vector2(0, 0)
         self.on_ground = False
@@ -56,9 +57,9 @@ class Dancer(pygame.sprite.Sprite):
     def apply_damage(self, damage):
         # Apply damage to the dancer
         self.health -= damage
-        print(f"Dancer's health: {self.health}")
         if self.health <= 0:
-            self.die()
+            self.health = 0
+            self.alive = False
     
     def die(self):
         print("Dancer has died")
@@ -138,12 +139,17 @@ class Dancer(pygame.sprite.Sprite):
         # Redraw stick figure to update visuals (e.g., shield indicator)
         self.draw_stick_figure()
 
-    def draw_health_bar(self, screen):
+    def draw_health_bar(self, screen, camera):
+        # Get the position of the dancer adjusted by the camera
+        screen_rect = camera.apply(self)
+
         # Define health bar dimensions
         bar_width = 40
         bar_height = 5
-        bar_x = self.rect.centerx - bar_width // 2
-        bar_y = self.rect.bottom + 5
+
+        # Position the health bar above the dancer's sprite
+        bar_x = screen_rect.x + self.image.get_width() // 2 - bar_width // 2
+        bar_y = screen_rect.y - 10  # 10 pixels above the dancer
 
         # Calculate health ratio
         health_ratio = self.health / 100
