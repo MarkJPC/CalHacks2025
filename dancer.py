@@ -130,11 +130,11 @@ class Dancer(pygame.sprite.Sprite):
 
             # dash ability
             if (self.can_dash):
-                self.dash(X_AXIS)
+                self.dash()
 
             # Blink ability
             if self.can_blink:
-                self.blink()
+                self.blink(X_AXIS)
                 self.can_blink = False  # Reset after use
         else:
             # If not moving, reset velocity.x
