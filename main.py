@@ -15,10 +15,11 @@ def main():
     pygame.display.set_caption('Rhythm Runner Prototype')
     clock = pygame.time.Clock()
 
-    # Create game objects
-    dancer = Dancer((100, HEIGHT - 100))
-    composer = Composer(dancer)
     level = Level()
+
+    # Create game objects
+    dancer = Dancer((100, HEIGHT - 100), level)
+    composer = Composer(dancer, level)
     all_sprites = pygame.sprite.Group()
     all_sprites.add(dancer)
     all_sprites.add(level.platforms)

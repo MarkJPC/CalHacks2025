@@ -138,8 +138,8 @@ class Dancer(pygame.sprite.Sprite):
             self.shielded = False
         
         # Magnet
-        if self.magnet_enabled and self.magnet_timer <= 0:
-            self.magnet_enabled = False
+        if self.enable_magnet and self.magnet_timer <= 0:
+            self.enable_magnet = False
 
     def update_ability_timers(self):
         # Update shield timer
