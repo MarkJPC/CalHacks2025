@@ -238,6 +238,11 @@ class Dancer(pygame.sprite.Sprite):
         # update center pos
         self.center_pos = pygame.math.Vector2(self.rect.centerx, self.rect.centery)
 
+        # Check if the `dancer` exceeds the `level height`
+        if (self.center_pos.y >= LEVEL_HEIGHT):
+            print("EXCEEDED LOWER-HEIGHT. (kill dancer)")
+            self.health = -1
+
     def check_collisions(self, axis, platforms):
         if axis == X_AXIS:
             hits = pygame.sprite.spritecollide(self, platforms, False)
