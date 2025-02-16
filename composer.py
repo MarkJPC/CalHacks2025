@@ -75,7 +75,7 @@ class Composer:
                 self.note_sounds['shield'].play()
         # Magnet - 5
         if key == pygame.K_5:
-            if self.use_energy(self.ability_costs[6]):
+            if self.use_energy(self.ability_costs[5]):
                 self.dancer.activate_magnet()
                 self.note_sounds['magnet'].play()
 
