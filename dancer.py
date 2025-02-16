@@ -103,9 +103,6 @@ class Dancer(pygame.sprite.Sprite):
         self.rect.y += self.velocity.y
         self.check_collisions('y', platforms)
 
-        # Check abilities
-        #self.check_abilities()
-
         # Update abilities
         self.update_ability_timers()
 
@@ -122,12 +119,10 @@ class Dancer(pygame.sprite.Sprite):
             # dash ability
             if (self.can_dash):
                 self.dash()
-                self.can_dash = False  
 
             # Blink ability
             if self.can_blink:
-                self.blink()
-                self.can_blink = False  # Reset after use
+                self.blink(X_AXIS)
 
         elif keys[pygame.K_RIGHT]:
             self.velocity.x = DANCER_SPEED
@@ -135,8 +130,7 @@ class Dancer(pygame.sprite.Sprite):
 
             # dash ability
             if (self.can_dash):
-                self.dash()
-                self.can_dash = False  
+                self.dash(X_AXIS)
 
             # Blink ability
             if self.can_blink:
@@ -147,15 +141,23 @@ class Dancer(pygame.sprite.Sprite):
             self.velocity.x = 0
 
         if keys[pygame.K_UP]:
+            self.direction.y = -1
+            
+            if self.can_blink:
+                self.blink(Y_AXIS)
+                self.velocity.y = -DANCER_JUMP_POWER
+                
             if self.on_ground:
                 if self.can_super_jump:
                     self.super_jump()
                 else:
                     self.velocity.y = -DANCER_JUMP_POWER
-            self.direction.y = -1
         elif keys[pygame.K_DOWN]:
             self.direction.y = 1
-
+            
+            if self.can_blink:
+                self.blink(Y_AXIS)
+            
     def check_collisions(self, direction, platforms):
         if direction == 'x':
             hits = pygame.sprite.spritecollide(self, platforms, False)
@@ -178,12 +180,21 @@ class Dancer(pygame.sprite.Sprite):
                 self.on_ground = False
 
     def update_ability_timers(self):
+        """
+        Decrements all timers by 1 second.
+        
+        Includes: `shield_timer` and `magnet_timer`
+        """
         # Update shield timer
         if self.shielded:
             self.shield_timer -= 1
             if self.shield_timer <= 0:
                 self.shielded = False
-
+        # Update magnet timer
+        if self.enable_magnet:
+            self.magnet_timer -= 1
+            if self.magnet_timer <= 0:
+                self.enable_magnet = False
     # Ability methods (skeletons)
 
     def super_jump(self):
@@ -192,6 +203,13 @@ class Dancer(pygame.sprite.Sprite):
         self.can_super_jump = False
 
     def dash(self):
+        """
+        Dashes the `dancer` until it stops or hits a object.
+        
+        Sets:
+        
+        `can_dash` to `False`
+        """
         # Direction: -1 for left, 1 for right
         steps = int(DASH_DISTANCE / DASH_SPEED)
         for _ in range(steps):
@@ -200,19 +218,32 @@ class Dancer(pygame.sprite.Sprite):
             # Check for collisions
             if self.check_collisions('x', self.level.platforms):
                 # Collision occurred; stop the dash
-                self.can_dash = False
                 break
-        pass
+        self.can_dash = False
+        # pass
 
-    def blink(self):
-        # self.rect.x += BLINK_DISTANCE * direction.x
-        # self.rect.y += BLINK_DISTANCE * direction.y        
+    def blink(self, axis):
+        """
+        Blinks along the entered axis (x or y axis).
         
-        if (not self.check_collisions('x', self.level.platforms)):
-                self.rect.x += int(BLINK_DISTANCE) * self.direction.x
-        if (not self.check_collisions('y', self.level.platforms)):
-                self.rect.y += int(BLINK_DISTANCE) * self.direction.y        
-        pass
+        Blink can go through walls along the x-axis but not the y-axis.
+        
+        Sets:
+
+        `can_blink` to `False` after call. 
+        """  
+        # Blink along the x-direction
+        if (axis == X_AXIS):
+            if (not self.check_collisions('x', self.level.platforms)):
+                self.rect.x += BLINK_DISTANCE_ALONG_X * self.direction.x
+                # print("blink on x:", int(BLINK_DISTANCE) * self.direction.x) # debug
+        # Blink along the y-direction
+        elif (axis == Y_AXIS):
+            if (not self.check_collisions('y', self.level.platforms)):
+                self.rect.y += BLINK_DISTANCE_ALONG_Y * self.direction.y        
+                # print("blink on y:", int(BLINK_DISTANCE_ALONG_Y) * self.direction.y) # debug
+                
+        self.can_blink = False
 
     def activate_shield(self):
         # Activate shield and set timer

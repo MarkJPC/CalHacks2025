@@ -21,6 +21,8 @@ MAGNET_DURATION = 3
 BLINK_DISTANCE = (DANCER_SPEED / 2)
 DASH_DISTANCE = 100  # Total distance to dash
 DASH_SPEED = 5      # Movement per iteration
+BLINK_DISTANCE_ALONG_X = int(DASH_DISTANCE / 2)
+BLINK_DISTANCE_ALONG_Y = BLINK_DISTANCE_ALONG_X
 
 # Composer settings
 COMPOSER_KEY_BINDS = [1,2,3,4,5,6,7]
@@ -38,4 +40,6 @@ BPM = 120
 # Custom event for metronome tick
 METRONOME_EVENT = pygame.USEREVENT + 1
 
-
+# Misc.
+X_AXIS = 'x'
+Y_AXIS = 'y'
