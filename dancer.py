@@ -157,7 +157,16 @@ class Dancer(pygame.sprite.Sprite):
 
     def dash(self, direction):
         # Direction: -1 for left, 1 for right
-        # Implement dash movement here
+        dash_distance = 50  # Total distance to dash
+        dash_speed = 5      # Movement per iteration
+        steps = int(dash_distance / dash_speed)
+        for _ in range(steps):
+            # Move the dancer incrementally
+            self.rect.x += dash_speed * direction
+            # Check for collisions
+            if self.check_collisions('x', self.level.platforms):
+                # Collision occurred; stop the dash
+                break
         pass
 
     def blink(self):
