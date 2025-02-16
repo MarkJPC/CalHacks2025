@@ -5,7 +5,7 @@ import pygame
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 SCREEN_SIZE = (SCREEN_WIDTH, SCREEN_HEIGHT)
-LEVEL_WIDTH, LEVEL_HEIGHT = 3000, 1200  # Example large level size
+LEVEL_WIDTH, LEVEL_HEIGHT = 4700, 2000  # Example large level size
 
 # Colors
 BLACK = (0, 0, 0)
@@ -20,7 +20,7 @@ FPS = 60
 # Dancer settings
 DANCER_SPEED = 5
 DANCER_JUMP_POWER = 20
-SHIELD_DURATION = 3
+SHIELD_DURATION = 5
 MAGNET_DURATION = 5
 MAGNET_RANGE = 25
 DASH_DISTANCE = 100  # Total distance to dash

@@ -247,10 +247,18 @@ class Dancer(pygame.sprite.Sprite):
         if axis == X_AXIS:
             hits = pygame.sprite.spritecollide(self, platforms, False)
             if hits:
-                if self.velocity.x > 0:
-                    self.rect.right = hits[0].rect.left
-                if self.velocity.x < 0:
-                    self.rect.left = hits[0].rect.right
+                for hit in hits:
+                    if isinstance(hit, BlinkGate):
+                        # Push the dancer off the BlinkGate
+                        if self.velocity.x > 0:
+                            self.rect.right = hit.rect.left
+                        elif self.velocity.x < 0:
+                            self.rect.left = hit.rect.right
+                    else:
+                        if self.velocity.x > 0:
+                            self.rect.right = hit.rect.left
+                        elif self.velocity.x < 0:
+                            self.rect.left = hit.rect.right
         if axis == Y_AXIS:
             hits = pygame.sprite.spritecollide(self, platforms, False)
             if hits:
@@ -273,9 +281,40 @@ class Dancer(pygame.sprite.Sprite):
                 self.on_ground = False
                 self.on_moving_platform = None
 
-        # If standing on a moving platform, move with it
-        if self.on_moving_platform and axis == Y_AXIS:
-            self.rect.x += self.on_moving_platform.speed * self.on_moving_platform.direction
+            # If standing on a moving platform, move with it
+            if self.on_moving_platform:
+                # Move with the platform
+                move_x = self.on_moving_platform.speed * self.on_moving_platform.direction
+                self.rect.x += move_x
+
+                # After moving, check for collisions in the X-axis
+                hits = pygame.sprite.spritecollide(self, platforms, False)
+                # Exclude the platform we're standing on
+                hits = [hit for hit in hits if hit != self.on_moving_platform]
+                if hits:
+                    for hit in hits:
+                        if isinstance(hit, BlinkGate):
+                            # Collision with BlinkGate - push the dancer off the moving platform
+                            # Adjust position to avoid overlap
+                            if move_x > 0:
+                                self.rect.right = hit.rect.left
+                            elif move_x < 0:
+                                self.rect.left = hit.rect.right
+                            # Remove the dancer from the moving platform
+                            self.on_moving_platform = None
+                            self.on_ground = False  # Dancer is no longer on ground/platform
+                            break
+                        else:
+                            # Handle collisions with other platforms if necessary
+                            # Adjust position to avoid overlap
+                            if move_x > 0:
+                                self.rect.right = hit.rect.left
+                            elif move_x < 0:
+                                self.rect.left = hit.rect.right
+                            # Optionally remove from moving platform
+                            self.on_moving_platform = None
+                            self.on_ground = False
+                            break
 
     def update_ability_timers(self):
         """
