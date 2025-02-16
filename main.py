@@ -165,20 +165,27 @@ def handle_start_screen(screen):
     play_rect = play_text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
     exit_rect = exit_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 60))
 
+    pygame.time.set_timer(DEATH_EVENT, 1)    
+    menu_sound = pygame.mixer.Sound('assets/sounds/menu.wav')
+
     while True:
         screen.fill(BLACK)
         screen.blit(title_text, title_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 100)))
         screen.blit(play_text, play_rect)
         screen.blit(exit_text, exit_rect)
 
+        # menu_sound.play()
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                return False  # Exit the game
+                return False  # Exit the game                
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if play_rect.collidepoint(pygame.mouse.get_pos()):
                     return True  # Start the game
+                    pygame.mixer.pause('assets/sounds/menu.wav')
                 elif exit_rect.collidepoint(pygame.mouse.get_pos()):
                     return False  # Exit the game
+                    pygame.mixer.pause('assets/sounds/menu.wav')
 
         pygame.display.flip()
         pygame.time.Clock().tick(60)
