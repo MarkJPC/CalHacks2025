@@ -208,6 +208,10 @@ def handle_death_screen(screen, composer):
     death_sound.play()
     pygame.time.wait(1000)
     
+    # pygame.time.set_timer(DEATH_EVENT, 1)    
+    # menu_sound = pygame.mixer.Sound('assets/sounds/menu.wav')
+    # menu_sound.play()
+    
     while True:
         screen.fill(BLACK)
         screen.blit(death_text, death_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 100)))
@@ -225,6 +229,7 @@ def handle_death_screen(screen, composer):
 
         pygame.display.flip()
         pygame.time.Clock().tick(60)
+        
         composer.play_composed_music()
         
 
