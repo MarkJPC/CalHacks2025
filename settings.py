@@ -23,7 +23,7 @@ BLINK_DISTANCE = (DANCER_SPEED / 2)
 DASH_DISTANCE = 100  # Total distance to dash
 DASH_SPEED = 5      # Movement per iteration
 BLINK_DISTANCE_ALONG_X = int(DASH_DISTANCE / 2)
-BLINK_DISTANCE_ALONG_Y = BLINK_DISTANCE_ALONG_X
+BLINK_DISTANCE_ALONG_Y = BLINK_DISTANCE_ALONG_X# + 50 # adding a constant 50 allows for blinking through objects along y (idk why either)
 
 # Composer settings
 COMPOSER_KEY_BINDS = [1,2,3,4,5,6,7]
