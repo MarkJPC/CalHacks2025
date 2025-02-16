@@ -7,6 +7,7 @@ from settings import *
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 WHITE = (255, 255, 255)
+GRAY = (122, 122, 122)
 
 class Composer:
     def __init__(self, dancer=None, level=None):
@@ -140,14 +141,20 @@ class Composer:
         # Draw key binds
         key_bind_text_x = x
         key_bind_text_y = energy_text_y + 30
-        key_bind_text = self.font.render('--Ability/Buff Keybinds--', True, WHITE)
+        key_bind_text = self.font.render('--Ability Keybinds--', True, WHITE)
         screen.blit(key_bind_text, (key_bind_text_x, key_bind_text_y)) # draw the text at `x` and `y` locations
         
         offset_amount = 20
         key_bind_text_offset = key_bind_text_y + offset_amount
         counter = 0
-        for bind in COMPOSER_KEY_BINDS_TYPES:
-            key_bind_type = self.font.render(f'{COMPOSER_KEY_BINDS[counter]}: {bind}', True, WHITE)
+        for key_bind, bind_type in zip(COMPOSER_KEY_BINDS, COMPOSER_KEY_BINDS_TYPES):
+            key_bind_text = ''
+            # check if the ability was implmented
+            if (bind_type != COMPOSER_KEY_BINDS_TYPES[4] and bind_type != COMPOSER_KEY_BINDS_TYPES[6]):
+                key_bind_type = self.font.render(f'{key_bind}: {bind_type}', True, WHITE)
+            # not implemented yet
+            else:
+                key_bind_type = self.font.render(f'{key_bind}: {bind_type} [COMING SOON]', True, GRAY)
             screen.blit(key_bind_type, (key_bind_text_x, key_bind_text_offset))
             key_bind_text_offset += offset_amount
             counter += 1
