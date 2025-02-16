@@ -28,6 +28,17 @@ class Composer:
             COMPOSER_KEY_BINDS[6]: 10,  # Speeds up tempo
         }
 
+               # Load note sounds
+        self.note_sounds = {
+            'super_jump': pygame.mixer.Sound('assets/sounds/note_A.wav'),
+            'dash': pygame.mixer.Sound('assets/sounds/note_B.wav'),
+            'blink': pygame.mixer.Sound('assets/sounds/note_C.wav'),
+            'shield': pygame.mixer.Sound('assets/sounds/note_D.wav'),
+            'time_slow': pygame.mixer.Sound('assets/sounds/note_E.wav'),
+            'magnet': pygame.mixer.Sound('assets/sounds/note_F.wav'),
+            'speed_up_tempo': pygame.mixer.Sound('assets/sounds/note_G.wav'),
+        }
+
     def use_energy(self, amount):
         if self.sound_energy >= amount:
             self.sound_energy -= amount
@@ -45,22 +56,27 @@ class Composer:
         if key == pygame.K_1:
             if self.use_energy(self.ability_costs[1]):
                 self.dancer.can_super_jump = True
+                self.note_sounds['super_jump'].play()
          # Dash - 2
         if key == pygame.K_2:
             if self.use_energy(self.ability_costs[2]):
                 self.dancer.can_dash = True
+                self.note_sounds['dash'].play()
         # Blink - 3
         if key == pygame.K_3:
             if self.use_energy(self.ability_costs[3]):
                 self.dancer.can_blink = True
+                self.note_sounds['blink'].play()
         # Shield - 4
         if key == pygame.K_4:
             if self.use_energy(self.ability_costs[4]):
                 self.dancer.activate_shield()
-        # Magnet - 6
+                self.note_sounds['shield'].play()
+        # Magnet - 5
         if key == pygame.K_5:
             if self.use_energy(self.ability_costs[6]):
                 self.dancer.activate_magnet()
+                self.note_sounds['magnet'].play()
 
     def handle_input(self, keys):
         # Super Jump - 1

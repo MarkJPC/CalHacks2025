@@ -9,7 +9,7 @@ from level import Level
 
 def main():
     pygame.init()
-    #pygame.mixer.init()
+    pygame.mixer.init()
 
     screen = pygame.display.set_mode(SCREEN_SIZE)
     pygame.display.set_caption('Tempo Tactics Prototype')
@@ -25,6 +25,13 @@ def main():
     all_sprites.add(level.platforms)
     all_sprites.add(level.note_shards)
 
+    # Set up metronome timer
+    beat_interval = int((60 / BPM) * 1000)  # Convert seconds to milliseconds
+    pygame.time.set_timer(METRONOME_EVENT, beat_interval)
+
+    # Load metronome sound
+    metronome_sound = pygame.mixer.Sound('assets/sounds/metronome_tick.wav')
+
     running = True
     while running:
         clock.tick(FPS)
@@ -36,6 +43,8 @@ def main():
             elif event.type == pygame.KEYDOWN:
                 # Handle keydown events for abilities
                 composer.handle_keydown(event.key)
+            elif event.type == METRONOME_EVENT:
+                metronome_sound.play()
 
         # Get key states
         keys = pygame.key.get_pressed()
