@@ -3,6 +3,7 @@
 import pygame
 from settings import *
 import math
+import level
 
 # Define colors
 WHITE = (255, 255, 255)
@@ -14,10 +15,9 @@ class Dancer(pygame.sprite.Sprite):
     def __init__(self, pos, level=None):
         super().__init__()
         self.level = level if level is not None else "NULL_LEVEL"
-
+        self.composer = ''
         self.image = pygame.Surface((40, 80), pygame.SRCALPHA)
         self.rect = self.image.get_rect(topleft=pos)
-        
         # # debug
         # print(self.rect)
         # print(self.rect.x //2)
@@ -48,7 +48,6 @@ class Dancer(pygame.sprite.Sprite):
         self.draw_stick_figure()
         self.center_pos = pygame.math.Vector2(self.rect.centerx, self.rect.centery)
         print("intitial pos:",self.center_pos)
-
 
     def draw_stick_figure(self):
     # Clear surface
@@ -112,9 +111,9 @@ class Dancer(pygame.sprite.Sprite):
         self.handle_input(keys)
         self.apply_gravity()
         self.rect.x += self.velocity.x
-        self.check_collisions('x', platforms)
+        self.check_collisions(X_AXIS, platforms)
         self.rect.y += self.velocity.y
-        self.check_collisions('y', platforms)
+        self.check_collisions(Y_AXIS, platforms)
 
         # Check if the magnet collects any `music shards`
         self.handle_magnet()
@@ -124,12 +123,26 @@ class Dancer(pygame.sprite.Sprite):
 
         # Redraw stick figure to update visuals (e.g., shield indicator)
         self.draw_stick_figure()
+        
+    def calc_magnitude(self, x, y):
+        return math.sqrt(x**2 + y**2)
 
     def handle_magnet(self):
         if not self.enable_magnet:
             return
-    
-    
+        
+        if self.level != "NULL_LEVEL":
+            for shard in self.level.note_shards:
+                # print(shard.rect.x, shard.rect.y)  # Access position
+                shard_vector_length = self.calc_magnitude(shard.rect.x, shard.rect.y)
+                dancer_vector_length = self.calc_magnitude(self.rect.x, self.rect.y)
+                
+                # if the vector lengths is within `MAGNET_RANGE` -> collect the `shard`
+                if (abs(shard_vector_length - dancer_vector_length) <= MAGNET_RANGE):
+                    shard.kill()    # remove the `shard` as its colleted
+                    self.composer.recharge(SHARD_RECHARGE_RATE)
+                    print("removed shard at:", shard.rect.x, ", ", shard.rect.y)    # debug
+                
     def handle_input(self, keys):
         """
         Handles key inputs and activates proper movement and associated abilities if they are active. 
@@ -183,7 +196,7 @@ class Dancer(pygame.sprite.Sprite):
         
         # update center pos
         self.center_pos = pygame.math.Vector2(self.rect.centerx, self.rect.centery)
-        print("curr pos:",self.center_pos)
+        # print("curr pos:",self.center_pos)
 
     def check_collisions(self, axis, platforms):
         if axis == X_AXIS:
@@ -264,12 +277,12 @@ class Dancer(pygame.sprite.Sprite):
             if (not self.check_collisions(X_AXIS, self.level.platforms)):
                 self.rect.x += BLINK_DISTANCE_ALONG_X * self.direction.x
                 # print("blink on x:", int(BLINK_DISTANCE) * self.direction.x) # debug
+
         # Blink along the y-direction
         elif (axis == Y_AXIS):
             if (not self.check_collisions(Y_AXIS, self.level.platforms)):
                 self.rect.y += BLINK_DISTANCE_ALONG_Y * self.direction.y        
-                # print("blink on y:", int(BLINK_DISTANCE_ALONG_Y) * self.direction.y) # debug
-                
+                # print("blink on y:", int(BLINK_DISTANCE_ALONG_Y) * self.direction.y) # debug        
         self.can_blink = False
 
     def activate_shield(self):

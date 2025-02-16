@@ -21,6 +21,7 @@ def main():
     # Create game objects
     dancer = Dancer((100, HEIGHT - 100), level)
     composer = Composer(dancer, level)
+    dancer.composer = composer
     all_sprites = pygame.sprite.Group()
     all_sprites.add(dancer)
     all_sprites.add(*level.platforms)
@@ -71,7 +72,7 @@ def main():
         collected_shards = pygame.sprite.spritecollide(dancer, level.note_shards, True)
         if collected_shards:
             for shard in collected_shards:
-                composer.recharge(20)
+                composer.recharge(SHARD_RECHARGE_RATE)
                 #collect_sound = pygame.mixer.Sound('assets/sounds/collect.wav')
                 #collect_sound.play()
 
