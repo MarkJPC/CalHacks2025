@@ -12,7 +12,7 @@ def main():
     #pygame.mixer.init()
 
     screen = pygame.display.set_mode(SCREEN_SIZE)
-    pygame.display.set_caption('Rhythm Runner Prototype')
+    pygame.display.set_caption('Tempo Tactics Prototype')
     clock = pygame.time.Clock()
 
     level = Level()
