@@ -33,6 +33,9 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            elif event.type == pygame.KEYDOWN:
+                # Handle keydown events for abilities
+                composer.handle_keydown(event.key)
 
         # Get key states
         keys = pygame.key.get_pressed()

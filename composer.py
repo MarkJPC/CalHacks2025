@@ -38,7 +38,29 @@ class Composer:
         self.sound_energy = min(self.sound_energy + amount, self.max_energy)
 
     def update(self, keys):
-        self.handle_input(keys)
+        #self.handle_input(keys)
+        pass
+
+    def handle_keydown(self, key):
+        if key == pygame.K_1:
+            if self.use_energy(self.ability_costs[1]):
+                self.dancer.super_jump = True
+         # Dash - 2
+        if key == pygame.K_2:
+            if self.use_energy(self.ability_costs[2]):
+                self.dancer.can_dash = True
+        # Blink - 3
+        if key == pygame.K_3:
+            if self.use_energy(self.ability_costs[3]):
+                self.dancer.can_blink = True
+        # Shield - 4
+        if key == pygame.K_4:
+            if self.use_energy(self.ability_costs[4]):
+                self.dancer.activate_shield()
+        # Magnet - 6
+        if key == pygame.K_5:
+            if self.use_energy(self.ability_costs[6]):
+                self.dancer.activate_magnet()
 
     def handle_input(self, keys):
         # Super Jump - 1

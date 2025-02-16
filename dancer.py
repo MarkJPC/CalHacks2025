@@ -65,7 +65,7 @@ class Dancer(pygame.sprite.Sprite):
         self.check_collisions('y', platforms)
 
         # Check abilities
-        self.check_abilities()
+        #self.check_abilities()
 
         # Update abilities
         self.update_ability_timers()
@@ -79,10 +79,31 @@ class Dancer(pygame.sprite.Sprite):
 
         if keys[pygame.K_LEFT]:
             self.velocity.x = -DANCER_SPEED
-            direction.x = -1            
+            direction.x = -1  
+
+            # dash ability
+            if (self.can_dash):
+                self.dash(direction.x)
+                self.can_dash = False  
+
+            # Blink ability
+            if self.can_blink:
+                self.blink(direction)
+                self.can_blink = False  # Reset after use
+
         elif keys[pygame.K_RIGHT]:
             self.velocity.x = DANCER_SPEED
             direction.x = 1
+
+            # dash ability
+            if (self.can_dash):
+                self.dash(direction.x)
+                self.can_dash = False  
+
+            # Blink ability
+            if self.can_blink:
+                self.blink(direction)
+                self.can_blink = False  # Reset after use
         else:
             # If not moving, reset velocity.x
             self.velocity.x = 0
@@ -94,19 +115,9 @@ class Dancer(pygame.sprite.Sprite):
                     self.can_boost_jump = False
                 else:
                     self.velocity.y = -DANCER_JUMP_POWER
-            direction.y = 11
+            direction.y = 1
         elif keys[pygame.K_DOWN]:
             direction.y = -1
-
-        # Blink ability
-        if self.can_blink and (direction.x != 0 or direction.y != 0):
-            self.blink(direction)
-            self.can_blink = False  # Reset after use
-
-        # Dash ability
-        if self.can_dash and direction.x != 0:
-            self.dash(direction.x)
-            self.can_dash = False  # Reset after use
 
     def check_collisions(self, direction, platforms):
         if direction == 'x':
@@ -128,30 +139,6 @@ class Dancer(pygame.sprite.Sprite):
                     self.velocity.y = 0
             else:
                 self.on_ground = False
-
-    def check_abilities(self):
-        # Boost Jump
-        if self.can_boost_jump:
-            # The actual jump is handled in handle_input when UP key is pressed
-            self.can_boost_jump = False  # Reset after use
-
-        # Dash
-        if self.can_dash:
-            # Dash is initiated in handle_input when moving left/right
-            self.can_dash = False  # Reset after use
-
-        # Blink
-        if self.can_blink:
-            self.blink()
-            self.can_blink = False  # Reset after use
-
-        # Shield
-        if self.shielded and self.shield_timer <= 0:
-            self.shielded = False
-        
-        # Magnet
-        if self.enable_magnet and self.magnet_timer <= 0:
-            self.enable_magnet = False
 
     def update_ability_timers(self):
         # Update shield timer
