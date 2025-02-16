@@ -204,14 +204,13 @@ def handle_death_screen(screen, composer):
     death_sound = pygame.mixer.Sound('assets/sounds/death.wav')
 
     death_sound.play()
-
+    pygame.time.wait(1000)
+    
     while True:
         screen.fill(BLACK)
         screen.blit(death_text, death_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 100)))
         screen.blit(play_text, play_rect)
         screen.blit(exit_text, exit_rect)
-
-        composer.play_composed_music()
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -224,6 +223,8 @@ def handle_death_screen(screen, composer):
 
         pygame.display.flip()
         pygame.time.Clock().tick(60)
+        composer.play_composed_music()
+        
 
 def handle_victory_screen(screen, composer):
     font = pygame.font.SysFont('Arial', 50)
@@ -238,15 +239,14 @@ def handle_victory_screen(screen, composer):
     win_sound = pygame.mixer.Sound('assets/sounds/win.wav')
 
     win_sound.play()
-
+    pygame.time.wait(1000)
+    
     while True:
         screen.fill(BLACK)
         screen.blit(victory_text, victory_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 100)))
         screen.blit(play_text, play_rect)
         screen.blit(exit_text, exit_rect)
-        
-        composer.play_composed_music()
-        
+                
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return False  # Exit the game
@@ -258,7 +258,7 @@ def handle_victory_screen(screen, composer):
 
         pygame.display.flip()
         pygame.time.Clock().tick(60)
-
+        composer.play_composed_music()
 
 if __name__ == '__main__':
     main()

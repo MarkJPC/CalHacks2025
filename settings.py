@@ -31,11 +31,22 @@ COMPOSER_KEY_BINDS = [1,2,3,4,5,6,7]
     # 2: Dash
     # 3: Blink
     # 4: Shield
-    # 5: Time Slow
-    # 6: Magnet
+    # 5: Magnet
+    # 6: Time Slow
     # 7: Speeds up tempo
 COMPOSER_KEY_BINDS_TYPES = ["Super jump", "Dash", "Blink", "Shield", 
-                            "Time Slow", "Magnet", "Speeds up tempo"]
+                            "Magnet", "Time Slow", "Speeds up tempo"]
+
+# Ability costs (`Key` is keyboard bind, `value` is ability cost)
+ABILITY_COSTS = {
+    COMPOSER_KEY_BINDS[0]: 10,  # Super Jump
+    COMPOSER_KEY_BINDS[1]: 10,  # Dash
+    COMPOSER_KEY_BINDS[2]: 15,  # Blink
+    COMPOSER_KEY_BINDS[3]: 15,  # Shield
+    COMPOSER_KEY_BINDS[4]: 10,  # Time slow
+    COMPOSER_KEY_BINDS[5]: 10,  # Magnet
+    COMPOSER_KEY_BINDS[6]: 10,  # Speeds up tempo
+}
 
 # Beats per minute
 BPM = 120
