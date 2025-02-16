@@ -44,30 +44,40 @@ class Composer:
             if self.use_energy(ABILITY_COSTS[1]):
                 self.dancer.can_super_jump = True
                 self.note_sounds[COMPOSER_KEY_BINDS_TYPES[0]].play()
+                self.note_sounds[COMPOSER_KEY_BINDS_TYPES[5]].play()
+                self.note_sounds[COMPOSER_KEY_BINDS_TYPES[6]].play()
                 self.sequence_of_activated_abilities.append(COMPOSER_KEY_BINDS[0])
         # Dash - 2
         if key == pygame.K_2:
             if self.use_energy(ABILITY_COSTS[2]):
                 self.dancer.can_dash = True
                 self.note_sounds[COMPOSER_KEY_BINDS_TYPES[1]].play()
+                self.note_sounds[COMPOSER_KEY_BINDS_TYPES[4]].play()
+                self.note_sounds[COMPOSER_KEY_BINDS_TYPES[6]].play()
                 self.sequence_of_activated_abilities.append(COMPOSER_KEY_BINDS[1])
         # Blink - 3
         if key == pygame.K_3:
             if self.use_energy(ABILITY_COSTS[3]):
                 self.dancer.can_blink = True
                 self.note_sounds[COMPOSER_KEY_BINDS_TYPES[2]].play()
+                self.note_sounds[COMPOSER_KEY_BINDS_TYPES[4]].play()
+                self.note_sounds[COMPOSER_KEY_BINDS_TYPES[6]].play()
                 self.sequence_of_activated_abilities.append(COMPOSER_KEY_BINDS[2])
         # Shield - 4
         if key == pygame.K_4:
             if self.use_energy(ABILITY_COSTS[4]):
                 self.dancer.activate_shield()
                 self.note_sounds[COMPOSER_KEY_BINDS_TYPES[3]].play()
+                self.note_sounds[COMPOSER_KEY_BINDS_TYPES[1]].play()
+                self.note_sounds[COMPOSER_KEY_BINDS_TYPES[6]].play()
                 self.sequence_of_activated_abilities.append(COMPOSER_KEY_BINDS[3])
         # Magnet - 5
         if key == pygame.K_5:
             if self.use_energy(ABILITY_COSTS[4]):
                 self.dancer.activate_magnet()
                 self.note_sounds[COMPOSER_KEY_BINDS_TYPES[5]].play()
+                self.note_sounds[COMPOSER_KEY_BINDS_TYPES[1]].play()
+                self.note_sounds[COMPOSER_KEY_BINDS_TYPES[3]].play()
                 self.sequence_of_activated_abilities.append(COMPOSER_KEY_BINDS[4])
 
         print(self.sequence_of_activated_abilities)
