@@ -192,11 +192,17 @@ def handle_death_screen(screen):
     play_rect = play_text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
     exit_rect = exit_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 60))
 
+    pygame.time.set_timer(DEATH_EVENT, 1)    
+    death_sound = pygame.mixer.Sound('assets/sounds/death.wav')
+
+    death_sound.play()
+
     while True:
         screen.fill(BLACK)
         screen.blit(death_text, death_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 100)))
         screen.blit(play_text, play_rect)
         screen.blit(exit_text, exit_rect)
+
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -218,6 +224,11 @@ def handle_victory_screen(screen):
 
     play_rect = play_text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
     exit_rect = exit_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 60))
+
+    pygame.time.set_timer(WIN_EVENT, 1)    
+    win_sound = pygame.mixer.Sound('assets/sounds/win.wav')
+
+    win_sound.play()
 
     while True:
         screen.fill(BLACK)

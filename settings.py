@@ -44,6 +44,10 @@ BPM = 120
 # Custom event for metronome tick
 METRONOME_EVENT = pygame.USEREVENT + 1
 
+DEATH_EVENT = pygame.USEREVENT
+
+WIN_EVENT = pygame.USEREVENT
+
 # Misc.
 X_AXIS = 'x'
 Y_AXIS = 'y'
