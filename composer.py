@@ -46,7 +46,9 @@ class Composer:
                 self.note_sounds[COMPOSER_KEY_BINDS_TYPES[0]].play()
                 self.note_sounds[COMPOSER_KEY_BINDS_TYPES[5]].play()
                 self.note_sounds[COMPOSER_KEY_BINDS_TYPES[6]].play()
-                self.sequence_of_activated_abilities.append(COMPOSER_KEY_BINDS[0])
+                chord = {COMPOSER_KEY_BINDS_TYPES[0], COMPOSER_KEY_BINDS_TYPES[5], COMPOSER_KEY_BINDS_TYPES[6]}
+                # self.sequence_of_activated_abilities.append(COMPOSER_KEY_BINDS[0])
+                self.sequence_of_activated_abilities.append(chord)
         # Dash - 2
         if key == pygame.K_2:
             if self.use_energy(ABILITY_COSTS[2]):
@@ -54,7 +56,9 @@ class Composer:
                 self.note_sounds[COMPOSER_KEY_BINDS_TYPES[1]].play()
                 self.note_sounds[COMPOSER_KEY_BINDS_TYPES[4]].play()
                 self.note_sounds[COMPOSER_KEY_BINDS_TYPES[6]].play()
-                self.sequence_of_activated_abilities.append(COMPOSER_KEY_BINDS[1])
+                # self.sequence_of_activated_abilities.append(COMPOSER_KEY_BINDS[1])
+                chord = {COMPOSER_KEY_BINDS_TYPES[1], COMPOSER_KEY_BINDS_TYPES[4], COMPOSER_KEY_BINDS_TYPES[6]}
+                self.sequence_of_activated_abilities.append(chord)
         # Blink - 3
         if key == pygame.K_3:
             if self.use_energy(ABILITY_COSTS[3]):
@@ -62,7 +66,9 @@ class Composer:
                 self.note_sounds[COMPOSER_KEY_BINDS_TYPES[2]].play()
                 self.note_sounds[COMPOSER_KEY_BINDS_TYPES[4]].play()
                 self.note_sounds[COMPOSER_KEY_BINDS_TYPES[6]].play()
-                self.sequence_of_activated_abilities.append(COMPOSER_KEY_BINDS[2])
+                # self.sequence_of_activated_abilities.append(COMPOSER_KEY_BINDS[2])
+                chord = {COMPOSER_KEY_BINDS_TYPES[2], COMPOSER_KEY_BINDS_TYPES[4], COMPOSER_KEY_BINDS_TYPES[6]}
+                self.sequence_of_activated_abilities.append(chord)
         # Shield - 4
         if key == pygame.K_4:
             if self.use_energy(ABILITY_COSTS[4]):
@@ -70,7 +76,9 @@ class Composer:
                 self.note_sounds[COMPOSER_KEY_BINDS_TYPES[3]].play()
                 self.note_sounds[COMPOSER_KEY_BINDS_TYPES[1]].play()
                 self.note_sounds[COMPOSER_KEY_BINDS_TYPES[6]].play()
-                self.sequence_of_activated_abilities.append(COMPOSER_KEY_BINDS[3])
+                # self.sequence_of_activated_abilities.append(COMPOSER_KEY_BINDS[3])
+                chord = {COMPOSER_KEY_BINDS_TYPES[3], COMPOSER_KEY_BINDS_TYPES[1], COMPOSER_KEY_BINDS_TYPES[6]}
+                self.sequence_of_activated_abilities.append(chord)
         # Magnet - 5
         if key == pygame.K_5:
             if self.use_energy(ABILITY_COSTS[4]):
@@ -78,8 +86,10 @@ class Composer:
                 self.note_sounds[COMPOSER_KEY_BINDS_TYPES[5]].play()
                 self.note_sounds[COMPOSER_KEY_BINDS_TYPES[1]].play()
                 self.note_sounds[COMPOSER_KEY_BINDS_TYPES[3]].play()
-                self.sequence_of_activated_abilities.append(COMPOSER_KEY_BINDS[4])
-
+                # self.sequence_of_activated_abilities.append(COMPOSER_KEY_BINDS[4])
+                chord = {COMPOSER_KEY_BINDS_TYPES[5], COMPOSER_KEY_BINDS_TYPES[1], COMPOSER_KEY_BINDS_TYPES[3]}
+                self.sequence_of_activated_abilities.append(chord)
+        
         print(self.sequence_of_activated_abilities)
         # LEVEL WIDE AFFECTS
         # # Speeds up tempo - 7
@@ -155,7 +165,7 @@ class Composer:
     
     def play_composed_music(self):
         """
-        Plays one note, and it will point to the next note to be played.
+        Plays chord, and it will point to the next chord to be played.
         
         Note: needs to be in a while loop
         """
@@ -163,26 +173,26 @@ class Composer:
         
         if (size_of_activated_abilities <= 0):  # no abilities pressed, return
             return
-
-        # play note
-        key_bind_pressed = self.sequence_of_activated_abilities[self.play_activated_abilities_note_at_index]
-        self.note_sounds[COMPOSER_KEY_BINDS_TYPES[key_bind_pressed - 1]].play()
-        pygame.time.wait(500)   # wait before going back/playing another note
-        # check the note to play, 
+                
+        # Play chord/notes
+        chord = self.sequence_of_activated_abilities[self.play_activated_abilities_note_at_index]
+        for bind_type in chord: # bind type will be the ability type
+            self.note_sounds[bind_type].play()  # play the associated sound with the ability
+        
         if (self.play_activated_abilities_note_at_index == size_of_activated_abilities - 1):
             self.play_activated_abilities_note_at_index = 0    # replay the created music composition from the start, cycle
             return
+
         self.play_activated_abilities_note_at_index += 1    # play the next note in the sequence        
+        pygame.time.wait(500)   # wait before going back/playing another note
         
-    # def play_composed_music_PRIVATE(self):
-    #     key_bind_pressed = self.sequence_of_activated_abilities[self.play_activated_abilities_note_at_index]
-    #     self.note_sounds[COMPOSER_KEY_BINDS_TYPES[key_bind_pressed - 1]].play()
-    #     pygame.time.wait(500)   # wait before going back/playing another note
-    #     if (self.play_activated_abilities_note_at_index == len(self.sequence_of_activated_abilities) - 1):
-    #         self.play_activated_abilities_note_at_index = 0    # replay from the start the created music composition
-    #         return
-    #     self.play_activated_abilities_note_at_index += 1    # play the next note in the sequence
+        # # play note
+        # key_bind_pressed = self.sequence_of_activated_abilities[self.play_activated_abilities_note_at_index]
+        # self.note_sounds[COMPOSER_KEY_BINDS_TYPES[key_bind_pressed - 1]].play()
+        # pygame.time.wait(500)   # wait before going back/playing another note
+        # # check the note to play, 
+        # if (self.play_activated_abilities_note_at_index == size_of_activated_abilities - 1):
+        #     self.play_activated_abilities_note_at_index = 0    # replay the created music composition from the start, cycle
+        #     return
+        # self.play_activated_abilities_note_at_index += 1    # play the next note in the sequence        
         
-    #     # for key_bind_pressed in self.sequence_of_activated_abilities:
-    #     #     self.note_sounds[COMPOSER_KEY_BINDS_TYPES[key_bind_pressed - 1]].play()
-    #     #     pygame.time.wait(1000)
