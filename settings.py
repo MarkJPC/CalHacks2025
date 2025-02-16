@@ -34,7 +34,9 @@ COMPOSER_KEY_BINDS = [1,2,3,4,5,6,7]
     # 4: Shield
     # 5: Time Slow
     # 6: Magnet
-    # 7:Speeds up tempo
+    # 7: Speeds up tempo
+COMPOSER_KEY_BINDS_TYPES = ["Super jump", "Dash", "Blink", "Shield", 
+                            "Time Slow", "Magnet", "Speeds up tempo"]
 
 # Beats per minute
 BPM = 120

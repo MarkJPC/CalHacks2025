@@ -133,4 +133,22 @@ class Composer:
         pygame.draw.rect(screen, GREEN, (x, y, current_width, energy_bar_height))
         # Energy text
         energy_text = self.font.render(f'Tempo: {int(self.sound_energy)}', True, WHITE)
-        screen.blit(energy_text, (x, y + energy_bar_height + 5))
+        energy_text_x = x
+        energy_text_y = y + energy_bar_height + 5
+        screen.blit(energy_text, (energy_text_x, energy_text_y))
+        
+        # Draw key binds
+        key_bind_text_x = x
+        key_bind_text_y = energy_text_y + 30
+        key_bind_text = self.font.render('--Ability/Buff Keybinds--', True, WHITE)
+        screen.blit(key_bind_text, (key_bind_text_x, key_bind_text_y)) # draw the text at `x` and `y` locations
+        
+        offset_amount = 20
+        key_bind_text_offset = key_bind_text_y + offset_amount
+        counter = 0
+        for bind in COMPOSER_KEY_BINDS_TYPES:
+            key_bind_type = self.font.render(f'{COMPOSER_KEY_BINDS[counter]}: {bind}', True, WHITE)
+            screen.blit(key_bind_type, (key_bind_text_x, key_bind_text_offset))
+            key_bind_text_offset += offset_amount
+            counter += 1
+            
