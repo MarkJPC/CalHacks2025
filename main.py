@@ -6,6 +6,7 @@ from settings import *
 from dancer import Dancer
 from composer import Composer
 from level import Level
+from camera import Camera
 
 def main():
     pygame.init()
@@ -22,8 +23,11 @@ def main():
     composer = Composer(dancer, level)
     all_sprites = pygame.sprite.Group()
     all_sprites.add(dancer)
-    all_sprites.add(level.platforms)
-    all_sprites.add(level.note_shards)
+    all_sprites.add(*level.platforms)
+    all_sprites.add(*level.note_shards)
+
+    # Create a camera
+    camera = Camera(LEVEL_WIDTH, LEVEL_HEIGHT)
 
     # Set up metronome timer
     beat_interval = int((60 / BPM) * 1000)  # Convert seconds to milliseconds
@@ -53,6 +57,16 @@ def main():
         dancer.update(keys, level.platforms)
         composer.update(keys)
 
+        camera.update(dancer)
+
+        # Clear screen ONCE
+        screen.fill(BLACK)
+
+        # Draw all sprites at their camera-adjusted positions
+        for sprite in all_sprites:
+            screen_position = camera.apply(sprite)
+            screen.blit(sprite.image, screen_position)
+
         # Check for note shard collection
         collected_shards = pygame.sprite.spritecollide(dancer, level.note_shards, True)
         if collected_shards:
@@ -62,8 +76,8 @@ def main():
                 #collect_sound.play()
 
         # Draw
-        screen.fill(BLACK)
-        all_sprites.draw(screen)
+        #screen.fill(BLACK)
+        #all_sprites.draw(screen)
         composer.draw_ui(screen)
 
         pygame.display.flip()

@@ -5,6 +5,7 @@ import pygame
 WIDTH = 800
 HEIGHT = 600
 SCREEN_SIZE = (WIDTH, HEIGHT)
+LEVEL_WIDTH, LEVEL_HEIGHT = 1600, 1200  # Example large level size
 
 # Colors
 BLACK = (0, 0, 0)
