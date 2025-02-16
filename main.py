@@ -38,7 +38,7 @@ def main():
 
         # Update
         dancer.update(keys, level.platforms)
-        composer.update(keys, dancer)
+        composer.update(keys)
 
         # Check for note shard collection
         collected_shards = pygame.sprite.spritecollide(dancer, level.note_shards, True)

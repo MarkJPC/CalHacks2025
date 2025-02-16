@@ -9,7 +9,7 @@ BLUE = (0, 0, 255)
 
 class Dancer(pygame.sprite.Sprite):
 
-    # initialize the dancer
+    # Initialize the dancer
     def __init__(self, pos):
         super().__init__()
         self.image = pygame.Surface((40, 80), pygame.SRCALPHA)
@@ -22,15 +22,11 @@ class Dancer(pygame.sprite.Sprite):
         self.can_dash = False
         self.can_blink = False
 
-
-        # time slow works same as shield (activated by composer, timer runs down)
-        # magnet works same as shield
+        # Shield attributes
         self.shielded = False
         self.shield_timer = 0
 
-        # speed up tempo
-
-        # draw dancer
+        # Draw dancer
         self.draw_stick_figure()
 
     def draw_stick_figure(self):
@@ -56,8 +52,7 @@ class Dancer(pygame.sprite.Sprite):
         self.velocity.y += 1  # Adjust gravity as needed
 
     def update(self, keys, platforms):
-
-        # physical updates
+        # Physical updates
         self.handle_input(keys)
         self.apply_gravity()
         self.rect.x += self.velocity.x
@@ -65,24 +60,37 @@ class Dancer(pygame.sprite.Sprite):
         self.rect.y += self.velocity.y
         self.check_collisions('y', platforms)
 
+        # Check abilities
+        self.check_abilities()
+
         # Update abilities
-        if self.shielded:
-            self.shield_timer -= 1
-            if self.shield_timer <= 0:
-                self.shielded = False
-            self.draw_stick_figure()  # Refresh shield visual
+        self.update_ability_timers()
+
+        # Redraw stick figure to update visuals (e.g., shield indicator)
+        self.draw_stick_figure()
 
     def handle_input(self, keys):
         self.velocity.x = 0
         if keys[pygame.K_LEFT]:
             self.velocity.x = -DANCER_SPEED
-
-
-
-        if keys[pygame.K_RIGHT]:
+            # Dash when moving left
+            if self.can_dash:
+                self.dash(-1)
+        elif keys[pygame.K_RIGHT]:
             self.velocity.x = DANCER_SPEED
-        if keys[pygame.K_UP] and self.on_ground:
-            self.velocity.y = -DANCER_JUMP_POWER
+            # Dash when moving right
+            if self.can_dash:
+                self.dash(1)
+        else:
+            # If not moving, reset velocity.x
+            self.velocity.x = 0
+
+        if keys[pygame.K_UP]:
+            if self.on_ground:
+                if self.can_boost_jump:
+                    self.boost_jump()
+                else:
+                    self.velocity.y = -DANCER_JUMP_POWER
 
     def check_collisions(self, direction, platforms):
         if direction == 'x':
@@ -105,15 +113,52 @@ class Dancer(pygame.sprite.Sprite):
             else:
                 self.on_ground = False
 
-    # Ability methods(use them then set boolean back to false)
-    def super_jump(self):
-        self.velocity.y = -DANCER_JUMP_POWER * 1.5
+    def check_abilities(self):
+        # Boost Jump
+        if self.can_boost_jump:
+            # The actual jump is handled in handle_input when UP key is pressed
+            self.can_boost_jump = False  # Reset after use
+
+        # Dash
+        if self.can_dash:
+            # Dash is initiated in handle_input when moving left/right
+            self.can_dash = False  # Reset after use
+
+        # Blink
+        if self.can_blink:
+            self.blink()
+            self.can_blink = False  # Reset after use
+
+        # Shield
+        if self.shielded and self.shield_timer <= 0:
+            self.shielded = False
+
+    def update_ability_timers(self):
+        # Update shield timer
+        if self.shielded:
+            self.shield_timer -= 1
+            if self.shield_timer <= 0:
+                self.shielded = False
+
+    # Ability methods (skeletons)
+
+    def boost_jump(self):
+        # This method is called when UP key is pressed and can_boost_jump is True
+        # Replace pass with the implementation later
+        pass
 
     def dash(self, direction):
-        dash_distance = 50
-        self.rect.x += dash_distance * direction
+        # Direction: -1 for left, 1 for right
+        # Implement dash movement here
+        pass
+
+    def blink(self):
+        # Implement blink (teleport) action here
+        pass
 
     def activate_shield(self):
+        # Activate shield and set timer
         self.shielded = True
         self.shield_timer = FPS * 3  # Shield lasts 3 seconds
 
+    # Additional methods for other abilities can be added here
