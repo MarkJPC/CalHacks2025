@@ -44,7 +44,7 @@ class Composer:
     def handle_keydown(self, key):
         if key == pygame.K_1:
             if self.use_energy(self.ability_costs[1]):
-                self.dancer.super_jump = True
+                self.dancer.can_super_jump = True
          # Dash - 2
         if key == pygame.K_2:
             if self.use_energy(self.ability_costs[2]):

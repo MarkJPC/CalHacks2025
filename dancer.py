@@ -20,7 +20,7 @@ class Dancer(pygame.sprite.Sprite):
         self.on_ground = False
 
         # Set ability-related attributes (ability booleans)
-        self.can_boost_jump = False
+        self.can_super_jump = False
         self.can_dash = False
         self.can_blink = False
         self.enable_magnet = False
@@ -110,14 +110,14 @@ class Dancer(pygame.sprite.Sprite):
 
         if keys[pygame.K_UP]:
             if self.on_ground:
-                if self.can_boost_jump:
-                    self.boost_jump()
-                    self.can_boost_jump = False
+                if self.can_super_jump:
+                    self.super_jump()
+                    self.can_super_jump = False
                 else:
                     self.velocity.y = -DANCER_JUMP_POWER
-            direction.y = 1
-        elif keys[pygame.K_DOWN]:
             direction.y = -1
+        elif keys[pygame.K_DOWN]:
+            direction.y = 1
 
     def check_collisions(self, direction, platforms):
         if direction == 'x':
@@ -149,12 +149,13 @@ class Dancer(pygame.sprite.Sprite):
 
     # Ability methods (skeletons)
 
-    def boost_jump(self):
+    def super_jump(self):
+        print("super jump")
         self.velocity.y = -DANCER_JUMP_POWER * 1.5
 
     def dash(self, direction):
         # Direction: -1 for left, 1 for right
-        dash_distance = 50  # Total distance to dash
+        dash_distance = 100  # Total distance to dash
         dash_speed = 5      # Movement per iteration
         steps = int(dash_distance / dash_speed)
         for _ in range(steps):
