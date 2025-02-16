@@ -2,6 +2,7 @@
 
 import pygame
 from settings import *
+import math
 
 # Define colors
 WHITE = (255, 255, 255)
@@ -32,32 +33,68 @@ class Dancer(pygame.sprite.Sprite):
         self.shielded = False
         self.shield_timer = 0
 
+        # animation
+        self.animation_frame = 0  # Frame counter for animation
+        self.animation_speed = 0.1  # Determines how fast the animation plays
+
         # Draw dancer
         self.draw_stick_figure()
 
     def draw_stick_figure(self):
-        # Clear surface
+    # Clear surface
         self.image.fill((0, 0, 0, 0))
         # Draw stick figure parts
         center_x = self.image.get_width() // 2
+
         # Head
         pygame.draw.circle(self.image, WHITE, (center_x, 15), 10, 2)
+
         # Body
         pygame.draw.line(self.image, WHITE, (center_x, 25), (center_x, 55), 2)
+
+        # Animation offsets
+        leg_offset = math.sin(self.animation_frame) * 10
+        arm_offset = math.sin(self.animation_frame + math.pi) * 10
+
         # Arms
-        pygame.draw.line(self.image, WHITE, (center_x, 35), (center_x - 15, 45), 2)
-        pygame.draw.line(self.image, WHITE, (center_x, 35), (center_x + 15, 45), 2)
+        pygame.draw.line(self.image, WHITE, (center_x, 35),
+                        (center_x - 15, 35 + arm_offset), 2)
+        pygame.draw.line(self.image, WHITE, (center_x, 35),
+                        (center_x + 15, 35 - arm_offset), 2)
+
         # Legs
-        pygame.draw.line(self.image, WHITE, (center_x, 55), (center_x - 10, 75), 2)
-        pygame.draw.line(self.image, WHITE, (center_x, 55), (center_x + 10, 75), 2)
-        # Shield indicator
+        pygame.draw.line(self.image, WHITE, (center_x, 55),
+                        (center_x - 10, 75 + leg_offset), 2)
+        pygame.draw.line(self.image, WHITE, (center_x, 55),
+                        (center_x + 10, 75 - leg_offset), 2)
+
+        # Shield indicator with pulsating glow effect
         if self.shielded:
-            pygame.draw.circle(self.image, BLUE, (center_x, 40), 35, 2)
+            pulse = (math.sin(pygame.time.get_ticks() * 0.005) + 1) * 0.5  # Value between 0 and 1
+            for i in range(5):
+                alpha = int(50 * (1 - (i / 5)) * pulse)
+                glow_radius = 35 + (i * 5) + (pulse * 5)
+                glow_surface = pygame.Surface((self.image.get_width(), self.image.get_height()), pygame.SRCALPHA)
+                pygame.draw.circle(glow_surface, (0, 0, 255, alpha), (center_x, 40), int(glow_radius))
+                self.image.blit(glow_surface, (0, 0))
 
     def apply_gravity(self):
         self.velocity.y += 1  # Adjust gravity as needed
 
     def update(self, keys, platforms):
+        # animation update
+        self.animation_frame += self.animation_speed
+        if self.animation_frame >= 2 * math.pi:
+            self.animation_frame -= 2 * math.pi
+
+        # Update animation frame only if moving
+        if self.velocity.x != 0 or self.velocity.y != 0:
+            self.animation_frame += self.animation_speed
+            if self.animation_frame >= 2 * math.pi:
+                self.animation_frame -= 2 * math.pi
+        else:
+            self.animation_frame = 0  # Reset to starting position
+
         # Physical updates
         self.handle_input(keys)
         self.apply_gravity()
