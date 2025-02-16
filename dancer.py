@@ -3,7 +3,7 @@
 import pygame
 from settings import *
 import math
-import level
+from level import *
 
 # Define colors
 WHITE = (255, 255, 255)
@@ -23,9 +23,13 @@ class Dancer(pygame.sprite.Sprite):
         # print(self.rect.x //2)
         # print(self.rect.y//2)
         # print(self.image.get_width() // 2)
+
+        # health
+        self.health = 100
         
         self.velocity = pygame.math.Vector2(0, 0)
         self.on_ground = False
+        self.on_moving_platform = None
         
         self.direction = pygame.math.Vector2(0, 0)
         
@@ -48,6 +52,16 @@ class Dancer(pygame.sprite.Sprite):
         self.draw_stick_figure()
         self.center_pos = pygame.math.Vector2(self.rect.centerx, self.rect.centery)
         print("intitial pos:",self.center_pos)
+
+    def apply_damage(self, damage):
+        # Apply damage to the dancer
+        self.health -= damage
+        print(f"Dancer's health: {self.health}")
+        if self.health <= 0:
+            self.die()
+    
+    def die(self):
+        print("Dancer has died")
 
     def draw_stick_figure(self):
     # Clear surface
@@ -123,6 +137,27 @@ class Dancer(pygame.sprite.Sprite):
 
         # Redraw stick figure to update visuals (e.g., shield indicator)
         self.draw_stick_figure()
+
+    def draw_health_bar(self, screen):
+        # Define health bar dimensions
+        bar_width = 40
+        bar_height = 5
+        bar_x = self.rect.centerx - bar_width // 2
+        bar_y = self.rect.bottom + 5
+
+        # Calculate health ratio
+        health_ratio = self.health / 100
+
+        # Draw background bar (red)
+        pygame.draw.rect(screen, (255, 0, 0), (bar_x, bar_y, bar_width, bar_height))
+
+        # Draw current health (green)
+        pygame.draw.rect(screen, (0, 255, 0), (bar_x, bar_y, bar_width * health_ratio, bar_height))
+
+    def check_shield_platforms(self, platforms):
+        for platform in platforms:
+            if isinstance(platform, ShieldPlatform):
+                platform.check_hazard(self)
         
     def calc_magnitude(self, x, y):
         return math.sqrt(x**2 + y**2)
@@ -196,7 +231,6 @@ class Dancer(pygame.sprite.Sprite):
         
         # update center pos
         self.center_pos = pygame.math.Vector2(self.rect.centerx, self.rect.centery)
-        # print("curr pos:",self.center_pos)
 
     def check_collisions(self, axis, platforms):
         if axis == X_AXIS:
@@ -213,11 +247,24 @@ class Dancer(pygame.sprite.Sprite):
                     self.rect.bottom = hits[0].rect.top
                     self.velocity.y = 0
                     self.on_ground = True
+                    # Check if standing on a moving platform
+                    if isinstance(hits[0], MovingPlatform):
+                        self.on_moving_platform = hits[0]
+                    else:
+                        self.on_moving_platform = None
+                    if isinstance(hits[0], ShieldPlatform):
+                        self.check_shield_platforms(platforms)
+
                 if self.velocity.y < 0:
                     self.rect.top = hits[0].rect.bottom
                     self.velocity.y = 0
             else:
                 self.on_ground = False
+                self.on_moving_platform = None
+
+        # If standing on a moving platform, move with it
+        if self.on_moving_platform and axis == Y_AXIS:
+            self.rect.x += self.on_moving_platform.speed * self.on_moving_platform.direction
 
     def update_ability_timers(self):
         """

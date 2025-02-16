@@ -7,6 +7,7 @@ from dancer import Dancer
 from composer import Composer
 from level import Level
 from camera import Camera
+from level import *
 
 def main():
     pygame.init()
@@ -58,7 +59,15 @@ def main():
         dancer.update(keys, level.platforms)
         composer.update(keys)
 
+        # update camera
         camera.update(dancer)
+
+        # update moving platforms and shield platforms
+        for platform in level.platforms:
+            if isinstance(platform, MovingPlatform):
+                platform.update()
+            if isinstance(platform, ShieldPlatform):
+                platform.update(dancer.shielded)
 
         # Clear screen ONCE
         screen.fill(BLACK)
@@ -67,6 +76,8 @@ def main():
         for sprite in all_sprites:
             screen_position = camera.apply(sprite)
             screen.blit(sprite.image, screen_position)
+
+        dancer.draw_health_bar(screen)
 
         # Check for note shard collection
         collected_shards = pygame.sprite.spritecollide(dancer, level.note_shards, True)

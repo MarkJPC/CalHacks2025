@@ -1,86 +1,76 @@
 # level.py
-
 import pygame
-from settings import *
+import math
+from settings import *  # Ensure your settings provide HEIGHT, LEVEL_WIDTH, etc.
 
 # Define colors
 GRAY = (169, 169, 169)
 YELLOW = (255, 255, 0)
+RED = (255, 0, 0)
+BLUE = (0, 0, 255)
+GREEN = (0, 255, 0)
 
 class Level:
     def __init__(self):
         self.platforms = pygame.sprite.Group()
         self.note_shards = pygame.sprite.Group()
-        self.create_platforms()
-        self.create_note_shards()
-        self.create_harmony_challenges()
+        self.create_foundational_platforms()
+        self.create_musical_sections()
+        self.create_finale()
 
-    def create_platforms(self):
-        # Ground - acts as main rhythm keeper
-        ground = Platform(0, HEIGHT - 40, LEVEL_WIDTH, 40)
+    def create_foundational_platforms(self):
+        # Ground spanning the entire level.
+        ground = Platform(0, LEVEL_HEIGHT - 40, LEVEL_WIDTH, 40)
         self.platforms.add(ground)
 
-        # SECTION 1: INTRO (C Major chord progression)
-        # Platforms spaced like quarter notes
-        self.platforms.add(Platform(200, 500, 100, 20))  # C
-        self.platforms.add(Platform(400, 450, 100, 20))  # E
-        self.platforms.add(Platform(600, 400, 100, 20))  # G
-        self.platforms.add(Platform(800, 350, 100, 20))  # C
+    def create_musical_sections(self):
+        # --- Section 1: Rhythmic Launch (Keys 1 & 2: Super Jump / Dash) ---
+        # Create a series of staggered platforms that force the dancer to
+        # use a super jump and dash to reach each one.
+        for i in range(4):
+            x = 300 + i * 250
+            y = LEVEL_HEIGHT - 100 - (i % 2) * 50  # Alternate vertical positioning.
+            platform = Platform(x, y, 150, 20)
+            self.platforms.add(platform)
+            # Place a note shard above the platform.
+            shard = NoteShard(x + 75, y - 30)
+            self.note_shards.add(shard)
 
-        # SECTION 2: VERSE (Arpeggio pattern)
-        for i in range(5):
-            self.platforms.add(Platform(1000 + i*150, 500 - (i%3)*50, 80, 15))
+        # --- Section 2: Spectral Passage (Keys 3 & 4: Blink / Shield) ---
+        base_x = 1300
+        # A platform the dancer must reach.
+        p1 = Platform(base_x, LEVEL_HEIGHT - 200, 200, 20)
+        self.platforms.add(p1)
 
-        # SECTION 3: CHORUS (Strong beats)
-        # Floating platforms requiring rhythm jumps
-        self.platforms.add(Platform(1600, 300, 200, 20)) 
-        self.platforms.add(Platform(1900, 200, 200, 20))
-        self.platforms.add(Platform(2200, 100, 200, 20))
+        # A BlinkGate obstacle: the dancer should use Blink (Key 3) to bypass it.
+        blink_gate = BlinkGate(base_x + 220, LEVEL_HEIGHT - 240, 15, 200)
+        self.platforms.add(blink_gate)
 
-        # SECTION 4: BRIDGE (Key change)
-        # Diagonal platform ascent
-        for i in range(8):
-            self.platforms.add(Platform(2500 + i*120, 400 - i*40, 100, 15))
+        # A hazardous section that requires the dancer to activate Shield (Key 4)
+        shield_section = ShieldPlatform(base_x + 300, LEVEL_HEIGHT - 300, 150, 20)
+        self.platforms.add(shield_section)
 
-        # SECTION 5: OUTRO (Coda)
-        # Grand finale platform
-        self.platforms.add(Platform(3400, 200, 400, 40))
+        # shard
+        shard2 = NoteShard(base_x + 375, LEVEL_HEIGHT - 330)
+        self.note_shards.add(shard2)
 
-    def create_note_shards(self):
-        # SECTION 1: INTRO (C Major scale)
-        # Placed in chord positions
-        self.note_shards.add(NoteShard(225, 480))  # C (1)
-        self.note_shards.add(NoteShard(425, 430))  # E (3)
-        self.note_shards.add(NoteShard(625, 380))  # G (5)
-        self.note_shards.add(NoteShard(825, 330))  # C (8)
+        # --- Section 3: Magnetic Finale (Key 5: Magnet) ---
+        base_x = 2200
+        # A moving platform that challenges timing.
+        moving_platform = MovingPlatform(base_x, LEVEL_HEIGHT - 150, 200, 20, speed=2)
+        self.platforms.add(moving_platform)
 
-        # SECTION 2: VERSE (Arpeggio targets)
-        for i in range(1,6):
-            self.note_shards.add(NoteShard(1040 + i*150, 480 - (i%3)*40))
+        # Final note shard—could be made to “magnetize” toward the dancer.
+        final_shard = FinalNoteShard(base_x + 100, LEVEL_HEIGHT - 180)
+        self.note_shards.add(final_shard)
 
-        # SECTION 3: CHORUS (Rhythm targets)
-        self.note_shards.add(NoteShard(1700, 270))
-        self.note_shards.add(NoteShard(2000, 170))
-        self.note_shards.add(NoteShard(2300, 70))
-
-        # SECTION 4: BRIDGE (Key change challenge)
-        for i in range(7):
-            self.note_shards.add(NoteShard(2550 + i*120, 360 - i*35))
-
-    def create_harmony_challenges(self):
-        # Add special platforms that require chord combinations
-        # 1. C-E-G Platform (Needs major triad)
-        chord_platform1 = HarmonyPlatform(2800, 300, (1,3,5))
-        self.platforms.add(chord_platform1)
-
-        # 2. F-A-C Platform (Needs subdominant)
-        chord_platform2 = HarmonyPlatform(3200, 200, (4,6,8))
-        self.platforms.add(chord_platform2)
-
-        # 3. Final Cadence Platform (G7-C)
-        final_platform = HarmonyPlatform(3400, 150, (5,7,2,8))
+    def create_finale(self):
+        # Final platform to finish the level.
+        final_platform = Platform(LEVEL_WIDTH - 200, LEVEL_HEIGHT - 100, 200, 20)
         self.platforms.add(final_platform)
 
+# ---------------------------
+# Basic platform class.
 class Platform(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height):
         super().__init__()
@@ -88,22 +78,67 @@ class Platform(pygame.sprite.Sprite):
         self.image.fill(GRAY)
         self.rect = self.image.get_rect(topleft=(x, y))
 
+# ---------------------------
+# Note shard collectible.
 class NoteShard(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
-        self.image = pygame.Surface((20, 20))
+        # Use SRCALPHA to allow transparency.
+        self.image = pygame.Surface((20, 20), pygame.SRCALPHA)
+        # Draw a simple diamond shape.
         pygame.draw.polygon(self.image, YELLOW, [(10, 0), (20, 10), (10, 20), (0, 10)])
         self.rect = self.image.get_rect(center=(x, y))
 
-class HarmonyPlatform(Platform):
-    """Platform that only appears when correct notes are played together"""
-    def __init__(self, x, y, required_notes):
-        super().__init__(x, y, 200, 20)
-        self.required_notes = set(required_notes)
-        self.active = False
-        self.image.fill((50, 50, 200))  # Blue hint color
+# ---------------------------
+# A gate that the dancer can pass only by using Blink (Key 3).
+class BlinkGate(Platform):
+    def __init__(self, x, y, width, height):
+        super().__init__(x, y, width, height)
+        self.image.fill(RED)  # Red to indicate danger.
+    # You can later add a method here to check if the blink buff is active.
 
-    def update(self, active_notes):
-        """Check if required chord is being played"""
-        self.active = self.required_notes.issubset(active_notes)
-        self.image.set_alpha(255 if self.active else 50)
+# ---------------------------
+# A platform that is hazardous unless the dancer's Shield (Key 4) is active.
+class ShieldPlatform(Platform):
+    def __init__(self, x, y, width, height):
+        super().__init__(x, y, width, height)
+        self.base_color = BLUE
+        self.image.fill(self.base_color)
+        self.solid = False  # Example property: only becomes solid/safe when shielded.
+    
+    def update(self, is_shielded):
+        # If shield buff is active, the platform becomes “safe.”
+        if is_shielded:
+            self.image.fill(GREEN)  # Change color to indicate safety.
+            self.solid = True
+        else:
+            self.image.fill(self.base_color)
+            self.solid = False
+
+    def check_hazard(self, dancer):
+        # If the dancer is not shielded and collides with the platform, apply damage
+        if not dancer.shielded:
+            dancer.apply_damage(1)
+
+# ---------------------------
+# A platform that moves horizontally.
+class MovingPlatform(Platform):
+    def __init__(self, x, y, width, height, speed=1):
+        super().__init__(x, y, width, height)
+        self.speed = speed
+        self.direction = 1  # Moving right initially.
+        self.initial_x = x
+
+    def update(self):
+        self.rect.x += self.speed * self.direction
+        # Reverse direction when 100 pixels away from the starting position.
+        if abs(self.rect.x - self.initial_x) > 100:
+            self.direction *= -1
+
+# ---------------------------
+# The final note shard collectible (can be used to signal level completion).
+class FinalNoteShard(NoteShard):
+    def __init__(self, x, y):
+        super().__init__(x, y)
+        # Change the color to green to indicate its special status.
+        self.image.fill(GREEN)

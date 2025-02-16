@@ -132,5 +132,5 @@ class Composer:
         # Current energy
         pygame.draw.rect(screen, GREEN, (x, y, current_width, energy_bar_height))
         # Energy text
-        energy_text = self.font.render(f'Energy: {int(self.sound_energy)}', True, WHITE)
+        energy_text = self.font.render(f'Tempo: {int(self.sound_energy)}', True, WHITE)
         screen.blit(energy_text, (x, y + energy_bar_height + 5))
